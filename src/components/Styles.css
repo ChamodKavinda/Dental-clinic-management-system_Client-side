@@ -38,6 +38,12 @@ header button.rounded-circle{
 
 header button.rounded-circle svg{
     color: #292929;
+    font-size: 18px !important;
+    transition: all 0.2s ease-in-out;
+}
+
+header button.rounded-circle:hover svg{
+    color: #0858f7 !important;
 }
 
 .searchBox{
@@ -64,9 +70,10 @@ header button.rounded-circle svg{
 
 .myAcc{
     text-align: left;
-    color: black !important;
+    color: white !important;
     text-transform: capitalize !important;
 }
+
 
 .myAcc .userImg{
     display: flex;
@@ -110,6 +117,6 @@ header button.rounded-circle svg{
 .myAcc .userInfo p{
     margin-top: 0px;
     font-size: 12px;
-    color: #000;
+    color: white;
     opacity: 0.7;
 }
