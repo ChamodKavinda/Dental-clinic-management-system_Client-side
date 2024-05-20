@@ -5,8 +5,8 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Features from './pages/Features';
 import Login from './pages/Login';
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import Navbar from './components/Navbar'
 import Dashboard from "./components/Dashboard";
 
 function App() {

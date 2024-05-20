@@ -16,9 +16,11 @@
     "@mui/joy": "^5.0.0-beta.36",
     "@mui/material": "^5.15.18",
     "axios": "^1.6.8",
+    "bootstrap": "^5.3.3",
     "mui": "^0.0.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.2.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
