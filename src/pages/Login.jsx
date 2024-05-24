@@ -7,7 +7,7 @@ import FormLabel from '@mui/material/FormLabel';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
-import Dashboard from '../components/Dashboard'
+import Dashboard from '../components/Dashboard/Dashboard'
 import { useNavigate  } from 'react-router-dom';
 import Navbar from "../components/Navbar";
 

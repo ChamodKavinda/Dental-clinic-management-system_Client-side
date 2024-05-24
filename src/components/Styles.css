@@ -3,7 +3,7 @@
 }
 
 body{
-    font-family: "Open Sans", sans-serif; background: #E1E2E2;
+    font-family: "Open Sans", sans-serif !important; background: #E1E2E2;
 }
 
 header{
