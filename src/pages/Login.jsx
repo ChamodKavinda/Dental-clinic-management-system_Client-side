@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Dashboard from '../components/Dashboard/Dashboard'
 import { useNavigate  } from 'react-router-dom';
-import Navbar from "../components/Navbar";
+import Navbar from "../global/Navbar";
 
 
 
@@ -22,7 +22,6 @@ export default function LoginFinal() {
 
     return (
         <main>
-            <Navbar/>
 
             <CssBaseline />
             <div

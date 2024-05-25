@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, TextField, Button } from '@mui/material';
-import Navbar from "../components/Navbar";
+import Navbar from "../global/Navbar";
 
 function Contact() {
     const handleSubmit = (e) => {
@@ -11,7 +11,7 @@ function Contact() {
 
     return (
         <>
-        <Navbar/>
+            <Navbar/>
         <div
             style={{
                 width: 400,

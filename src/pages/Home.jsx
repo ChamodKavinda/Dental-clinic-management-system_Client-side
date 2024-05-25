@@ -1,5 +1,5 @@
 import dental from '../assets/dental.jpg'
-import Navbar from "../components/Navbar";
+import Navbar from "../global/Navbar";
 import React from "react";
 
 function Home(){

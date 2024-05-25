@@ -1,9 +1,9 @@
-import './Styles.css';
-import { Link } from "react-router-dom";
-import teeth from '../assets/teeth.png';
+import '../Styles.css';
+import {Link, useNavigate} from "react-router-dom";
+import teeth from '../../assets/teeth.png';
 import { MdMenuOpen } from "react-icons/md";
 import Button from "@mui/material/Button";
-import SearchBox from "./SearchBox";
+import SearchBox from "../SearchBox";
 import { MdOutlineLightMode } from "react-icons/md";
 
 import * as React from 'react';
@@ -26,7 +26,10 @@ const Header = () => {
         setAnchorEl(null);
     };
 
-
+    const navigate = useNavigate();
+    const handleLoginClick = path => {
+        navigate(path);
+    };
 
     return (
         <header className="d-flex align-items-center">
@@ -106,7 +109,7 @@ const Header = () => {
                                     </ListItemIcon>
                                     Settings
                                 </MenuItem>
-                                <MenuItem onClick={handleClose}>
+                                <MenuItem onClick={() => handleLoginClick('/')}>
                                     <ListItemIcon>
                                         <Logout fontSize="small" />
                                     </ListItemIcon>

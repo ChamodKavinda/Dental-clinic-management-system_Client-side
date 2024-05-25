@@ -80,19 +80,47 @@
 }
 
 .dashboardBoxWrapper{
-    gap: 15px;
+    gap: 20px;
     width: 100%;
     flex-wrap: wrap;
 }
 
 .dashboardBoxWrapper .dashboardBox{
-    width:45%;
-    height: 150px;
+    width:48%;
+    height: 170px;
     background: #ccc;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .dashboardBoxWrapperRow .box{
     width: 250%;
-    height: 315px;
+    height: 100%;
     background: #ccc;
+}
+
+.main .dashboardBoxWrapper .dashboardBox{
+    background-color: #7DA2A9;
+}
+
+.main .dashboardBoxWrapper .dashboardBox h4{
+    color: white;
+    padding-left: 20px;
+    padding-top: 10px;
+}
+
+.main .dashboardBoxWrapper .dashboardBox p{
+    color: white;
+    padding-left: 20px;
+    padding-top: 10px;
+    font-size: 50px;
+}
+
+.main .dashboardBoxWrapper .dashboardBox .icon{
+    padding-left: 220px;
+    color: black;
+}
+
+.table .thead-dark th{
+    background-color: #0858f7 !important;
 }

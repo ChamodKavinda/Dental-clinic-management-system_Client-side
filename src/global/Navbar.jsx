@@ -9,12 +9,12 @@ function Navbar(){
 
     return(
         <AppBar position='static' sx={{ backgroundColor: 'white',boxShadow:'none' }}>
-            <Toolbar>
+            <Toolbar style={{ backgroundColor:'#A0AECD'}}>
                 <IconButton size='large' edge='start' color='black' aria-label='logo'>
                     <LocalHospitalIcon/>
                 </IconButton>
                 <Typography varient='h6' component='div' sx={{flexGrow:1}} style={{ textDecoration: 'none', color: 'black', margin: '0 10px',cursor:'pointer' }} onClick={handleTextClick}>Dental-Clinic-Management-System</Typography>
-            <Box>
+            <Box >
                 <NavLink to="/home" style={{ textDecoration: 'none', color: 'black', margin: '0 10px' }} className="link">Home</NavLink>
                 <NavLink to="/features" style={{ textDecoration: 'none', color: 'black', margin: '0 10px' }}className="link">Features</NavLink>
                 <NavLink to="/contactus" style={{ textDecoration: 'none', color: 'black', margin: '0 10px' }}className="link">Contact Us</NavLink>

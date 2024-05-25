@@ -1,10 +1,10 @@
-import Navbar from "../components/Navbar";
+import Navbar from "../global/Navbar";
 import React from "react";
 
 function Features(){
     return(
         <>
-        <Navbar/>
+            <Navbar/>
         <p>features</p>
         </>
 );
