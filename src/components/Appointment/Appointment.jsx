@@ -1,6 +1,8 @@
 import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
-import React from "react";
+import {useEffect, useState} from "react";
+import Axios from "axios";
+
 import {
     Grid,
     Typography,
@@ -15,6 +17,21 @@ import {
 } from "@mui/material";
 
 const Appointment = () =>{
+
+    const [appointment,setAppointment]=useState([]);
+
+    useEffect(()=>{
+        getAppointment();
+    },[]);
+
+    const getAppointment = ()=>{
+        Axios.get('http://localhost:3000/api/get')
+            .then(response =>{
+                setAppointment(response.data || []);
+            }).catch(error =>{
+                console.error("Axios error :",error)
+        });
+    }
 
     return(
         <>
@@ -150,29 +167,39 @@ const Appointment = () =>{
                                         </TableHead>
 
                                         <TableBody>
-                                            <TableRow>
-                                                <TableCell component='th' scope="row">P01</TableCell>
-                                                <TableCell component='th' scope="row">kamal</TableCell>
-                                                <TableCell component='th' scope="row">Dr.perera</TableCell>
-                                                <TableCell component='th' scope="row">2024/05/20</TableCell>
-                                                <TableCell component='th' scope="row">9.00am</TableCell>
-                                                <Button
-                                                sx={{margin:'0px 10px'}}
-                                                onClick={()=>{}}
-                                                >
-                                                    Update
-                                                </Button>
 
-                                                <Button
-                                                    sx={{margin:'0px 10px'}}
-                                                    onClick={()=>{}}
-                                                >
-                                                    Delete
-                                                </Button>
+                                            {
+                                                appointment.length > 0 ? appointment.map(appointment =>(
+                                                    <TableRow key={appointment.id}>
+                                                        <TableCell component='th' scope="row">{appointment.id}</TableCell>
+                                                        <TableCell component='th' scope="row">{appointment.pName}</TableCell>
+                                                        <TableCell component='th' scope="row">{appointment.dName}</TableCell>
+                                                        <TableCell component='th' scope="row">{appointment.date}</TableCell>
+                                                        <TableCell component='th' scope="row">{appointment.time}</TableCell>
+                                                        <TableCell>
+                                                            <Button
+                                                                sx={{margin:'0px 10px'}}
+                                                                onClick={()=>{}}
+                                                            >
+                                                                Update
+                                                            </Button>
 
-                                            </TableRow>
+                                                            <Button
+                                                                sx={{margin:'0px 10px'}}
+                                                                onClick={()=>{}}
+                                                            >
+                                                                Delete
+                                                            </Button>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )) : (
+                                                    <TableRow key={appointment.id}>
+                                                        <TableCell component='th' scope="row">No Data</TableCell>
+                                                    </TableRow>
+                                                )
+                                            }
+
                                         </TableBody>
-
                                     </Table>
                                 </TableContainer>
 
