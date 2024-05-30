@@ -18,7 +18,16 @@ import {
 
 const Appointment = () =>{
 
+    const [id,setId]=useState(0);
+    const [patient,setPatient]=useState('');
+    const [dentist,setDentist]=useState('');
+    const [date,setDate]=useState('');
+    const [time,setTime]=useState('');
+
+
     const [appointment,setAppointment]=useState([]);
+    const [submitted, setSubmitted] = useState(false);
+
 
     useEffect(()=>{
         getAppointment();
@@ -32,6 +41,26 @@ const Appointment = () =>{
                 console.error("Axios error :",error)
         });
     }
+
+    const saveAppointment=(data)=>{
+        setSubmitted(true);
+        const payload ={
+            id:data.id,
+            patient:data.patient,
+            dentist:data.dentist,
+            date:data.date,
+            time:data.time
+
+        }
+        Axios.post('http://localhost:3000/api/save',payload)
+            .then(response =>{
+                getAppointment();
+                setSubmitted(false);
+            }).catch(error => {
+            console.error("Axios error :", error)
+        })
+        }
+
 
     return(
         <>
@@ -70,8 +99,8 @@ const Appointment = () =>{
                                             id='id'
                                             name="id"
                                             sx={{width:'400px'}}
-                                            value={''}
-                                            onChange={e => {}}
+                                            value={id}
+                                            onChange={e => setId(e.target.value)}
                                         />
                                     </Grid>
 
@@ -81,12 +110,12 @@ const Appointment = () =>{
                                             Patient Name
                                         </Typography>
                                         <Input
-                                            type="number"
-                                            id='name'
-                                            name="name"
+                                            type="String"
+                                            id='patient'
+                                            name="patient"
                                             sx={{width:'400px'}}
-                                            value={''}
-                                            onChange={e => {}}
+                                            value={patient}
+                                            onChange={e => setPatient(e.target.value)}
                                         />
                                     </Grid>
 
@@ -95,12 +124,12 @@ const Appointment = () =>{
                                             Dentist
                                         </Typography>
                                         <Input
-                                            type="number"
-                                            id='name'
-                                            name="name"
+                                            type="String"
+                                            id='dentist'
+                                            name="dentist"
                                             sx={{width:'400px'}}
-                                            value={''}
-                                            onChange={e => {}}
+                                            value={dentist}
+                                            onChange={e => setDentist(e.target.value)}
                                         />
                                     </Grid>
 
@@ -113,8 +142,8 @@ const Appointment = () =>{
                                             id='name'
                                             name="name"
                                             sx={{width:'400px'}}
-                                            value={''}
-                                            onChange={e => {}}
+                                            value={date}
+                                            onChange={e => setDate(e.target.value)}
                                         />
                                     </Grid>
 
@@ -128,8 +157,8 @@ const Appointment = () =>{
                                             id='name'
                                             name="name"
                                             sx={{width:'400px'}}
-                                            value={''}
-                                            onChange={e => {}}
+                                            value={time}
+                                            onChange={e => setTime(e.target.value)}
                                         />
                                     </Grid>
 
@@ -148,6 +177,7 @@ const Appointment = () =>{
                                             backgroundColor:'#00c6e6'
                                         }
                                     }}
+                                    onClick={()=>saveAppointment({id,patient,dentist,date,time})}
                                 >
                                     Add Appointment
                                 </Button>
@@ -172,8 +202,8 @@ const Appointment = () =>{
                                                 appointment.length > 0 ? appointment.map(appointment =>(
                                                     <TableRow key={appointment.id}>
                                                         <TableCell component='th' scope="row">{appointment.id}</TableCell>
-                                                        <TableCell component='th' scope="row">{appointment.pName}</TableCell>
-                                                        <TableCell component='th' scope="row">{appointment.dName}</TableCell>
+                                                        <TableCell component='th' scope="row">{appointment.patient}</TableCell>
+                                                        <TableCell component='th' scope="row">{appointment.dentist}</TableCell>
                                                         <TableCell component='th' scope="row">{appointment.date}</TableCell>
                                                         <TableCell component='th' scope="row">{appointment.time}</TableCell>
                                                         <TableCell>
