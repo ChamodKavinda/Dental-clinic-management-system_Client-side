@@ -24,7 +24,7 @@ const Appointment = () =>{
     const [dentist,setDentist]=useState('');
     const [date,setDate]=useState('');
     const [time,setTime]=useState('');
-
+    const [isEdit,setIsEdit]=useState(false);
 
     const [appointment,setAppointment]=useState([]);
     const [submitted, setSubmitted] = useState(false);
@@ -44,6 +44,18 @@ const Appointment = () =>{
         getAppointment();
     },[]);
 
+
+    const setSelectedAppointment = (appointment)=>{
+        setId(appointment.id);
+        setPatient(appointment.patient);
+        setDentist(appointment.dentist);
+        setDate(appointment.date);
+        setTime(appointment.time);
+
+        setIsEdit(true);
+
+    };
+
     const getAppointment = ()=>{
         Axios.get('http://localhost:3000/api/get')
             .then(response =>{
@@ -53,28 +65,55 @@ const Appointment = () =>{
         });
     }
 
-    const saveAppointment=(data)=>{
-        setSubmitted(true);
-        const payload ={
-            id:data.id,
-            patient:data.patient,
-            dentist:data.dentist,
-            date:data.date,
-            time:data.time
 
-        }
-        Axios.post('http://localhost:3000/api/save',payload)
-            .then(response =>{
+    const saveAppointment = () => {
+        setSubmitted(true);
+
+        const payload = {
+            id: id,
+            patient: patient,
+            dentist: dentist,
+            date: date,
+            time: time
+        };
+
+        Axios.post('http://localhost:3000/api/save', payload)
+            .then(response => {
                 getAppointment();
                 setSubmitted(false);
-            }).catch(error => {
-            console.error("Axios error :", error)
-        });
-        }
+                setIsEdit(false);
+            })
+            .catch(error => {
+                console.error("Axios error :", error)
+            });
+    }
 
+        const updateAppointment = ()=>{
+            setSubmitted(true);
+
+
+            const payload = {
+                id: id,
+                patient: patient,
+                dentist: dentist,
+                date: date,
+                time: time
+            };
+
+            Axios.put('http://localhost:3000/api/update', payload)
+                .then(response => {
+                    getAppointment();
+                    setSubmitted(false);
+                    setIsEdit(false);
+                })
+                .catch(error => {
+                    console.error("Axios error :", error)
+                });
+        }
 
 
         const deleteAppointment = (userId)=>{
+
 
         const confirmed = confirm("Are you sure you want to delete this user?");
 
@@ -185,7 +224,7 @@ const Appointment = () =>{
 
 
                                     <Grid>
-                                        <Typography component={'label'} htmlFor="id" sx={{color:'#000000',marginRight:'20px',fontSize:'15px',width:'100px',display:'block'}}>
+                                        <Typography component={'label'} htmlFor="time" sx={{color:'#000000',marginRight:'20px',fontSize:'15px',width:'100px',display:'block'}}>
                                             Time
                                         </Typography>
                                         <Input
@@ -213,9 +252,11 @@ const Appointment = () =>{
                                             backgroundColor:'#00c6e6'
                                         }
                                     }}
-                                    onClick={()=>saveAppointment({id,patient,dentist,date,time})}
+                                    onClick={()=> isEdit ? updateAppointment() : saveAppointment()}
                                 >
-                                    Add Appointment
+                                    {
+                                        isEdit ? 'Update Appointment' : 'Add Appointment'
+                                    }
                                 </Button>
 
 
@@ -245,7 +286,7 @@ const Appointment = () =>{
                                                         <TableCell>
                                                             <Button
                                                                 sx={{margin:'0px 10px'}}
-                                                                onClick={()=>{}}
+                                                                onClick={()=>{setSelectedAppointment(row)}}
                                                             >
                                                                 Update
                                                             </Button>
