@@ -75,6 +75,10 @@ const Appointment = () =>{
 
 
         const deleteAppointment = (userId)=>{
+
+        const confirmed = confirm("Are you sure you want to delete this user?");
+
+        if (confirmed){
             fetch('http://localhost:3000/api/delete', {
                 method: 'DELETE',
                 headers: {
@@ -88,6 +92,9 @@ const Appointment = () =>{
                 }).catch(error=>{
                 console.error("Axios error :", error)
             });
+        }
+
+
     }
 
 
