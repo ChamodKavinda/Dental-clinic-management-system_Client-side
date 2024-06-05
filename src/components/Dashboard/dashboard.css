@@ -8,8 +8,8 @@
 
 .main .sidebarWrapper .sidebar{
     width: 20%;
-    height: 100vh;
-    position: fixed;
+    height: 130%;
+    position: absolute;
     top: 80px;
     left: 0px;
     background: #E1E2E2;
