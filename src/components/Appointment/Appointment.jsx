@@ -3,6 +3,7 @@ import Sidebar from "../global/Sidebar";
 import {useEffect, useState} from "react";
 import Axios from "axios";
 
+
 import {
     Grid,
     Typography,
@@ -28,6 +29,16 @@ const Appointment = () =>{
     const [appointment,setAppointment]=useState([]);
     const [submitted, setSubmitted] = useState(false);
 
+
+    useEffect(()=>{
+        if (!submitted){
+            setId(0);
+            setPatient('');
+            setDentist('');
+            setDate('');
+            setTime('');
+        }
+    },[submitted]);
 
     useEffect(()=>{
         getAppointment();
@@ -58,8 +69,26 @@ const Appointment = () =>{
                 setSubmitted(false);
             }).catch(error => {
             console.error("Axios error :", error)
-        })
+        });
         }
+
+
+
+        const deleteAppointment = (userId)=>{
+            fetch('http://localhost:3000/api/delete', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: userId })
+            })
+                .then(response =>{
+                    getAppointment();
+
+                }).catch(error=>{
+                console.error("Axios error :", error)
+            });
+    }
 
 
     return(
@@ -81,7 +110,7 @@ const Appointment = () =>{
                                     container
                                     spacing={1}
                                     sx={{
-                                        backgroundColor:'#E1E2E2',
+                                        backgroundColor:'white',
                                         marginBottom:'30px',
                                         display:'block',
                                     }}
@@ -92,7 +121,7 @@ const Appointment = () =>{
 
                                     <Grid>
                                         <Typography component={'label'} htmlFor="id" sx={{color:'#000000',marginRight:'20px',fontSize:'15px',width:'100px',display:'block'}}>
-                                            Appointment ID
+                                            ID
                                         </Typography>
                                         <Input
                                             type="number"
@@ -199,13 +228,13 @@ const Appointment = () =>{
                                         <TableBody>
 
                                             {
-                                                appointment.length > 0 ? appointment.map(appointment =>(
-                                                    <TableRow key={appointment.id}>
-                                                        <TableCell component='th' scope="row">{appointment.id}</TableCell>
-                                                        <TableCell component='th' scope="row">{appointment.patient}</TableCell>
-                                                        <TableCell component='th' scope="row">{appointment.dentist}</TableCell>
-                                                        <TableCell component='th' scope="row">{appointment.date}</TableCell>
-                                                        <TableCell component='th' scope="row">{appointment.time}</TableCell>
+                                                appointment.length > 0 ? appointment.map(row =>(
+                                                    <TableRow key={row.id}>
+                                                        <TableCell component='th' scope="row">{row.id}</TableCell>
+                                                        <TableCell component='th' scope="row">{row.patient}</TableCell>
+                                                        <TableCell component='th' scope="row">{row.dentist}</TableCell>
+                                                        <TableCell component='th' scope="row">{row.date}</TableCell>
+                                                        <TableCell component='th' scope="row">{row.time}</TableCell>
                                                         <TableCell>
                                                             <Button
                                                                 sx={{margin:'0px 10px'}}
@@ -216,14 +245,14 @@ const Appointment = () =>{
 
                                                             <Button
                                                                 sx={{margin:'0px 10px'}}
-                                                                onClick={()=>{}}
+                                                                onClick={()=>deleteAppointment(row.id)}
                                                             >
                                                                 Delete
                                                             </Button>
                                                         </TableCell>
                                                     </TableRow>
                                                 )) : (
-                                                    <TableRow key={appointment.id}>
+                                                    <TableRow >
                                                         <TableCell component='th' scope="row">No Data</TableCell>
                                                     </TableRow>
                                                 )
