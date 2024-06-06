@@ -5,6 +5,61 @@ import { ToastContainer, toast } from "react-toastify";
 
 
 const Signup = () => {
+
+    const navigate = useNavigate();
+    const [inputValue, setInputValue] = useState({
+        email: "",
+        password: "",
+        username: "",
+    });
+    const { email, password, username } = inputValue;
+    const handleOnChange = (e) => {
+        const { name, value } = e.target;
+        setInputValue({
+            ...inputValue,
+            [name]: value,
+        });
+    };
+
+    const handleError = (err) =>
+        toast.error(err, {
+            position: "bottom-left",
+        });
+    const handleSuccess = (msg) =>
+        toast.success(msg, {
+            position: "bottom-right",
+        });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const { data } = await axios.post(
+                "http://localhost:4000/signup",
+                {
+                    ...inputValue,
+                },
+                { withCredentials: true }
+            );
+            const { success, message } = data;
+            if (success) {
+                handleSuccess(message);
+                setTimeout(() => {
+                    navigate("/home");
+                }, 1000);
+            } else {
+                handleError(message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        setInputValue({
+            ...inputValue,
+            email: "",
+            password: "",
+            username: "",
+        });
+    };
+
     return(
         <div className="form_container">
             <h2>Signup Account</h2>
