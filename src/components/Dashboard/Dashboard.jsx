@@ -6,12 +6,48 @@ import { FaUserDoctor } from "react-icons/fa6";
 import { GrUserWorker } from "react-icons/gr";
 import { MdCalendarMonth } from "react-icons/md";
 import { FaWheelchair } from "react-icons/fa";
+import {useNavigate} from "react-router-dom";
+
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 function Dashboard() {
 
+    const navigate = useNavigate();
+    const [cookies, removeCookie] = useCookies([]);
+    const [username, setUsername] = useState("");
+    useEffect(() => {
+        const verifyCookie = async () => {
+            if (!cookies.token) {
+                navigate("/login");
+            }
+            const { data } = await axios.post(
+                "http://localhost:3000",
+                {},
+                { withCredentials: true }
+            );
+            const { status, user } = data;
+            setUsername(user);
+            return status
+                ? toast(`Hello ${user}`, {
+                    position: "top-right",
+                })
+                : (removeCookie("token"), navigate("/login"));
+        };
+        verifyCookie();
+    }, [cookies, navigate, removeCookie]);
+
+    const Logout = () => {
+        removeCookie("token");
+        navigate("/login");
+    };
 
     return (
+
         <>
+
             <Header/>
 
             <div className="main d-flex">
