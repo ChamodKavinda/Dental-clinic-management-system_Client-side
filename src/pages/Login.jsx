@@ -1,72 +1,43 @@
-import React from 'react';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import Input from '@mui/material/Input';
-import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
-import Dashboard from '../components/Dashboard/Dashboard'
-import { useNavigate  } from 'react-router-dom';
-import Navbar from "../global/Navbar";
+const Login = () => {
 
-
-
-export default function LoginFinal() {
-
-    const navigate = useNavigate();
-    const handleLoginClick = path => {
-        navigate(path);
-    };
-
-    return (
-        <main>
-
-            <CssBaseline />
-            <div
-                style={{
-                    width: 300,
-                    margin: 'auto', // center horizontally
-                    marginTop: 64, // add some space from the top
-                    padding: 16,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 16,
-                    borderRadius: 4,
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-                }}
-            >
+    return(
+        <div className="form_container">
+            <h2>Login Account</h2>
+            <form onSubmit={handleSubmit}>
                 <div>
-                    <Typography variant="h4">
-                        <b>Welcome!</b>
-                    </Typography>
-                    <Typography variant="body2">Sign in to continue.</Typography>
-                </div>
-                <FormControl>
-                    <FormLabel>Email</FormLabel>
-                    <Input
-                        name="email"
+                    <label htmlFor="email">Email</label>
+                    <input
                         type="email"
-                        placeholder="johndoe@email.com"
+                        name="email"
+                        value={email}
+                        placeholder="Enter your email"
+                        onChange={handleOnChange}
                     />
-                </FormControl>
-                <FormControl>
-                    <FormLabel>Password</FormLabel>
-                    <Input
-                        name="password"
+                </div>
+                <div>
+                    <label htmlFor="password">Password</label>
+                    <input
                         type="password"
-                        placeholder="password"
+                        name="password"
+                        value={password}
+                        placeholder="Enter your password"
+                        onChange={handleOnChange}
                     />
-                </FormControl>
-                <Button variant="contained" onClick={() => handleLoginClick('/dashboard')} >Log in</Button>
-                <Typography variant="body2" align="center">
-                    Don't have an account?{' '}
-                    <Link href="/sign-up" underline="always">
-                        Sign up
-                    </Link>
-                </Typography>
-            </div>
-        </main>
+                </div>
+                <button type="submit" >Submit</button>
+                <span>
+          Don't have an account? <Link to={"/signup"}>Signup</Link>
+        </span>
+            </form>
+            <ToastContainer />
+        </div>
     );
+
 }
+
+export default Login
