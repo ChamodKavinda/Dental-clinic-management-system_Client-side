@@ -14,7 +14,7 @@ import Appointment from "./components/Appointment/Appointment";
 import Patient from "./components/Patient/Patient";
 import Staff from "./components/Staff/Staff";
 import Dentist from "./components/Dentist";
-
+import Signup from "./pages/Signup";
 
 function App() {
     return (
@@ -25,7 +25,8 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/contactus" element={<Contact />} />
                 <Route path="/features" element={<Features />} />*/}
-                <Route path="/" element={<Login />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/appointment" element={<Appointment />} />
                 <Route path="/patient" element={<Patient />} />
