@@ -1,7 +1,7 @@
 import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
-import React, {useEffect} from "react";
-import { useState } from "react";
+import React, {useEffect,useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 import {
     Container,
@@ -14,33 +14,43 @@ import {
     Button
 } from '@mui/material';
 
-import {useNavigate} from "react-router-dom";
+
 
 function AddPatient() {
 
 
-    const [id,setId]=useState('');
-    const [name,setName]=useState('');
-    const [age,setAge]=useState('');
-    const [phone,setPhone]=useState('');
-    const [sex,setSex]=useState('');
-    const [address,setAddress]=useState('');
-    const [description,setDescription]=useState('');
+
 
     const [submitted, setSubmitted] = useState(false);
 
 
-    useEffect(()=>{
-        if (!submitted){
-            setId('');
-            setName('');
-            setAge('');
-            setPhone('');
-            setSex('');
-            setAddress(''),
-                setDescription('')
+    const handleReset = () => {
+        setPatient({
+            id: '',
+            name: '',
+            age: '',
+            phone: '',
+            sex: '',
+            address: '',
+            description: ''
+        });
+    };
+
+
+    useEffect(() => {
+        if (submitted) {
+            setPatient({
+                id: '',
+                name: '',
+                age: '',
+                phone: '',
+                sex: '',
+                address: '',
+                description: ''
+            });
+            setSubmitted(false);
         }
-    },[submitted]);
+    }, [submitted]);
 
     const navigate=useNavigate();
 
@@ -93,8 +103,8 @@ function AddPatient() {
                                                 label="Patient ID"
                                                 name="id"
                                                 variant="outlined"
-                                                value={id}
-                                                onChange={e => setId(e.target.value)}
+                                                value={patient.id}
+                                                onChange={handleChange}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -103,8 +113,8 @@ function AddPatient() {
                                                 label="Patient Name"
                                                 name="name"
                                                 variant="outlined"
-                                                value={name}
-                                                onChange={e => setName(e.target.value)}
+                                                value={patient.name}
+                                                onChange={handleChange}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -114,8 +124,8 @@ function AddPatient() {
                                                 name="age"
                                                 variant="outlined"
                                                 type="number"
-                                                value={age}
-                                                onChange={e => setAge(e.target.value)}
+                                                value={patient.age}
+                                                onChange={handleChange}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -125,8 +135,8 @@ function AddPatient() {
                                                 name="phone"
                                                 variant="outlined"
                                                 type="number"
-                                                value={phone}
-                                                onChange={e => setPhone(e.target.value)}
+                                                value={patient.phone}
+                                                onChange={handleChange}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -136,8 +146,8 @@ function AddPatient() {
                                                 label="Sex"
                                                 name="sex"
                                                 variant="outlined"
-                                                value={sex}
-                                                onChange={e => setSex(e.target.value)}
+                                                value={patient.sex}
+                                                onChange={handleChange}
                                             >
                                                 <MenuItem value="Male">Male</MenuItem>
                                                 <MenuItem value="Female">Female</MenuItem>
@@ -149,8 +159,8 @@ function AddPatient() {
                                                 label="Address"
                                                 name="address"
                                                 variant="outlined"
-                                                value={address}
-                                                onChange={e => setAddress(e.target.value)}
+                                                value={patient.address}
+                                                onChange={handleChange}
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -161,8 +171,8 @@ function AddPatient() {
                                                 variant="outlined"
                                                 multiline
                                                 rows={4}
-                                                value={description}
-                                                onChange={e => setDescription(e.target.value)}
+                                                value={patient.description}
+                                                onChange={handleChange}
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -174,7 +184,7 @@ function AddPatient() {
                                                 </Button>
 
                                                 <Button type="reset" variant="contained" color="error" sx={{marginRight:'10px'}}
-                                                        onClick={()=>setSubmitted(false)}>
+                                                        onClick={handleReset}>
                                                     Reset
                                                 </Button>
                                                 <Button type="submit" variant="contained" color="primary">
