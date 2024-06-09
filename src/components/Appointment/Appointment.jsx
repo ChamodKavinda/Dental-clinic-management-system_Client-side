@@ -57,7 +57,7 @@ const Appointment = () =>{
     };
 
     const getAppointment = ()=>{
-        Axios.get('http://localhost:3000/api/get')
+        Axios.get('http://localhost:3000/appointment/get')
             .then(response =>{
                 setAppointment(response.data || []);
             }).catch(error =>{
@@ -77,7 +77,7 @@ const Appointment = () =>{
             time: time
         };
 
-        Axios.post('http://localhost:3000/api/save', payload)
+        Axios.post('http://localhost:3000/appointment/save', payload)
             .then(response => {
                 getAppointment();
                 setSubmitted(false);
@@ -100,7 +100,7 @@ const Appointment = () =>{
                 time: time
             };
 
-            Axios.put('http://localhost:3000/api/update', payload)
+            Axios.put('http://localhost:3000/appointment/update', payload)
                 .then(response => {
                     getAppointment();
                     setSubmitted(false);
@@ -118,7 +118,7 @@ const Appointment = () =>{
         const confirmed = confirm("Are you sure you want to delete this user?");
 
         if (confirmed){
-            fetch('http://localhost:3000/api/delete', {
+            fetch('http://localhost:3000/appointment/delete', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
