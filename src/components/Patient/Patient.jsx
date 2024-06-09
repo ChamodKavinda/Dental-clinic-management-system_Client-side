@@ -1,7 +1,7 @@
 import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
-import React from "react";
-
+import React, {useEffect, useState} from "react";
+import {useNavigate} from 'react-router-dom';
 import { Edit, Delete } from '@mui/icons-material';
 import {
     Container,
@@ -18,46 +18,26 @@ import {
     Button,
     IconButton
 } from '@mui/material';
+import Axios from "axios";
 
 function Patient() {
-    const patients = [
-        {
-            id: 'P001',
-            name: 'M.Peter',
-            age: 25,
-            phone: '0768765456',
-            sex: 'Male',
-            address: 'Colombo',
-            description: 'Regular check-up'
-        },
-        {
-            id: 'P002',
-            name: 'M.Peter',
-            age: 25,
-            phone: '0768765456',
-            sex: 'Male',
-            address: 'Colombo',
-            description: 'Dental cleaning'
-        },
-        {
-            id: 'P003',
-            name: 'M.Peter',
-            age: 25,
-            phone: '0768765456',
-            sex: 'Male',
-            address: 'Colombo',
-            description: 'Cavity filling'
-        },
-        {
-            id: 'P004',
-            name: 'M.Peter',
-            age: 25,
-            phone: '0768765456',
-            sex: 'Male',
-            address: 'Colombo',
-            description: 'Tooth extraction'
-        }
-    ];
+
+    const [patient,setPatient]=useState([]);
+
+    const getPatient=()=>{
+        Axios.get('http://localhost:3000/patient/get')
+            .then(response=>{
+                setPatient(response.data || [])
+            }).catch(error=>{
+                console.error("Axios error :",error)
+        })
+    }
+
+    useEffect(()=>{
+        getPatient();
+    },[]);
+
+    const navigate=useNavigate();
 
     return (
         <>
@@ -81,7 +61,7 @@ function Patient() {
                                         <Paper sx={{ p: 2 }}>
                                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                                                 <Typography variant="h6"></Typography>
-                                                <Button variant="contained" color="primary">Add Patient</Button>
+                                                <Button variant="contained" color="primary" onClick={()=>navigate('/addPatient')}>Add Patient</Button>
                                             </Box>
                                             <TableContainer component={Paper}>
                                                 <Table>
@@ -98,15 +78,15 @@ function Patient() {
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
-                                                        {patients.map((patient, index) => (
-                                                            <TableRow key={index}>
-                                                                <TableCell>{patient.id}</TableCell>
-                                                                <TableCell>{patient.name}</TableCell>
-                                                                <TableCell>{patient.age}</TableCell>
-                                                                <TableCell>{patient.phone}</TableCell>
-                                                                <TableCell>{patient.sex}</TableCell>
-                                                                <TableCell>{patient.address}</TableCell>
-                                                                <TableCell>{patient.description}</TableCell>
+                                                        {patient.length > 0 ? patient.map(row =>(
+                                                            <TableRow key={row.id}>
+                                                                <TableCell component='th' scope="row">{row.id}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.name}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.age}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.number}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.sex}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.address}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.description}</TableCell>
                                                                 <TableCell>
                                                                     <IconButton color="primary">
                                                                         <Edit />
@@ -116,7 +96,12 @@ function Patient() {
                                                                     </IconButton>
                                                                 </TableCell>
                                                             </TableRow>
-                                                        ))}
+                                                        )): (
+                                                            <TableRow >
+                                                            <TableCell component='th' scope="row">No Data</TableCell>
+                                                            </TableRow>
+                                                        )
+                                                        }
                                                     </TableBody>
                                                 </Table>
                                             </TableContainer>
