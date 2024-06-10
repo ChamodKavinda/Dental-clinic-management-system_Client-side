@@ -12,11 +12,24 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import {Avatar, Box, Container, Divider, Grid, List, ListItem, ListItemText, Paper, Typography} from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Button,
+    Container,
+    Divider,
+    Grid,
+    List,
+    ListItem,
+    ListItemText,
+    Paper,
+    Typography
+} from "@mui/material";
 import { Event, Group, MedicalServices, Person} from "@mui/icons-material";
 
 import { SlCalender } from "react-icons/sl";
 import TodayIcon from '@mui/icons-material/Today';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Dashboard() {
 
@@ -46,14 +59,20 @@ function Dashboard() {
         }
     ];
 
+    const handleSuccess = (msg) =>
+        toast.success(msg, {
+            position: "top-right",
+        });
+
 
     const navigate = useNavigate();
     const [cookies, removeCookie] = useCookies([]);
     const [username, setUsername] = useState("");
+
     useEffect(() => {
         const verifyCookie = async () => {
             if (!cookies.token) {
-                navigate("/login");
+                /*navigate("/login");*/
             }
             const { data } = await axios.post(
                 "http://localhost:3000",
@@ -61,16 +80,17 @@ function Dashboard() {
                 { withCredentials: true }
             );
             const { status, user } = data;
+            console.log(data)
             setUsername(user);
-            return status
-                ? toast(`Hello ${user}`, {
+            if (status){
+                toast(`Hello ${user}`, {
                     position: "top-right",
                 })
-                : (removeCookie("token"), navigate("/login"));
+            }else
+                (removeCookie("token"), navigate("/login"));
         };
         verifyCookie();
     }, [cookies, navigate, removeCookie]);
-
     const Logout = () => {
         removeCookie("token");
         navigate("/login");
@@ -89,6 +109,7 @@ function Dashboard() {
 
 
                 <div>
+                    <ToastContainer />
 
                     <Box sx={{ display: 'flex', bgcolor:'#F7F7F7' }}>
                         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -103,6 +124,7 @@ function Dashboard() {
                                             <Box>
                                                 <Typography variant="h5" align="left">150</Typography>
                                                 <Typography>Total Appointment</Typography>
+                                                <Button onClick={Logout}>logut</Button>
                                             </Box>
                                         </Paper>
                                     </Grid>
