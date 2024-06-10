@@ -3,6 +3,10 @@ import Sidebar from "../global/Sidebar";
 import React, {useEffect, useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import { Edit, Delete } from '@mui/icons-material';
+
+import Alert from '@mui/material/Alert';
+import CheckIcon from '@mui/icons-material/Check';
+
 import {
     Container,
     Box,
@@ -22,7 +26,16 @@ import Axios from "axios";
 
 function Patient() {
 
+    const navigate=useNavigate();
     const [patient,setPatient]=useState([]);
+    const [alertOpen, setAlertOpen] = useState(false);
+
+
+
+    useEffect(()=>{
+        getPatient();
+    },[]);
+
 
     const getPatient=()=>{
         Axios.get('http://localhost:3000/patient/get')
@@ -33,11 +46,30 @@ function Patient() {
         })
     }
 
-    useEffect(()=>{
-        getPatient();
-    },[]);
 
-    const navigate=useNavigate();
+    const deletePatient=(userId)=>{
+
+        const confirmed=confirm("Are you sure you want to delete this user?");
+        if (confirmed){
+            fetch('http://localhost:3000/patient/delete',{
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: userId })
+            })
+                .then(response=>{
+                    getPatient()
+                    setAlertOpen(true);
+                    setTimeout(() => setAlertOpen(false), 3000);
+
+                }).catch(error=>{
+                    console.error('Axios error :',error);
+            })
+        }
+    }
+
+
 
     return (
         <>
@@ -54,6 +86,12 @@ function Patient() {
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                                 <Typography variant="h4">PATIENT DETAILS</Typography>
                             </Box>
+
+                            {alertOpen && (
+                                <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+                                    Deleted
+                                </Alert>
+                            )}
 
                             <Grid container spacing={2}>
                                 <Grid item xs={20}>
@@ -91,7 +129,7 @@ function Patient() {
                                                                     <IconButton color="primary">
                                                                         <Edit />
                                                                     </IconButton>
-                                                                    <IconButton color="secondary">
+                                                                    <IconButton color="secondary" onClick={()=>deletePatient(row.id)} >
                                                                         <Delete />
                                                                     </IconButton>
                                                                 </TableCell>
