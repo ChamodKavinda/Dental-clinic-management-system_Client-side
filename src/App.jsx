@@ -15,6 +15,9 @@ import Patient from "./components/Patient/Patient";
 import Staff from "./components/Staff/Staff";
 import Dentist from "./components/Dentist";
 import Signup from "./pages/Signup";
+import AddPatient from './components/Patient/AddPatient';
+import AddDentist from "./components/Dentist/AddDentist";
+import AddStaff from "./components/Staff/AddStaff";
 
 function App() {
     return (
@@ -32,6 +35,9 @@ function App() {
                 <Route path="/patient" element={<Patient />} />
                 <Route path="/dentist" element={<Dentist />} />
                 <Route path="/staff" element={<Staff />} />
+                <Route path="/addPatient" element={<AddPatient />} />
+                <Route path="/addDentist" element={<AddDentist />} />
+                <Route path="/addStaff" element={<AddStaff />} />
             </Routes>
 
 
