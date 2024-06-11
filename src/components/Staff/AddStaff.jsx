@@ -2,6 +2,9 @@ import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
 import React, {useEffect,useState} from "react";
 import {useNavigate} from "react-router-dom";
+import axios from 'axios';
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import {
     Container,
@@ -18,35 +21,58 @@ import {
 
 function AddStaff() {
 
-    const [submitted, setSubmitted] = useState(false);
+
+    const [id,setId] = useState('');
+    const [name,setName] = useState('');
+    const [age,setAge] = useState('');
+    const [number,setNumber] = useState('');
+    const [sex,setSex] = useState('');
+    const [address,setAddress] = useState('');
+    const [description,setDescription] = useState('');
+
+
+    const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+    const [touched, setTouched] = useState({
+        id: false,
+        name: false,
+        age: false,
+        number: false,
+        sex: false,
+        address: false,
+        description: false
+    });
 
     const handleReset = () => {
-        setEmployee({
-            id: '',
-            name: '',
-            age: '',
-            phone: '',
-            sex: '',
-            address: '',
-            description: ''
+        setId('');
+        setName('');
+        setAge('');
+        setNumber('');
+        setSex('');
+        setAddress('');
+        setDescription('');
+        setTouched({
+            id: false,
+            name: false,
+            age: false,
+            number: false,
+            sex: false,
+            address: false,
+            description: false
         });
     };
 
+    const handleSuccess = (msg) =>
+        toast.success(msg, {
+            position:'top-right'
+        });
 
     useEffect(() => {
-        if (submitted) {
-            setEmployee({
-                id: '',
-                name: '',
-                age: '',
-                phone: '',
-                sex: '',
-                address: '',
-                description: ''
-            });
-            setSubmitted(false);
+        if (id && name && age && number && sex && address) {
+            setIsSubmitDisabled(false);
+        } else {
+            setIsSubmitDisabled(true);
         }
-    }, [submitted]);
+    }, [id, name, age, number, sex, address]);
 
     const navigate=useNavigate();
 
@@ -60,17 +86,33 @@ function AddStaff() {
         description: ''
     });
 
-    const handleChange = (e) => {
-        setEmployee({
-            ...employee,
-            [e.target.name]: e.target.value
-        });
-    };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        handleSuccess('Saved Successfully');
 
-        console.log(employee);
+        handleReset();
+        e.preventDefault();
+        const payload = {
+            id: id,
+            name: name,
+            age: age,
+            number: number,
+            sex: sex,
+            address: address,
+            description: description
+        };
+
+        axios.post('http://localhost:3000/employee/save', payload)
+            .then(response => {
+                console.log(response);
+            }).catch(error => {
+            console.error('Axios error :', error);
+        });
+        console.log(payload);
+    };
+
+    const handleBlur = (field) => {
+        setTouched({ ...touched, [field]: true });
     };
 
     return (
@@ -89,7 +131,7 @@ function AddStaff() {
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                                 <Typography variant="h4">ADD EMPLOYEE</Typography>
                             </Box>
-
+                            <ToastContainer />
                             <Paper sx={{ p: 3 }}>
                                 <form onSubmit={handleSubmit}>
                                     <Grid container spacing={2}>
@@ -99,8 +141,12 @@ function AddStaff() {
                                                 label="Employee ID"
                                                 name="id"
                                                 variant="outlined"
-                                                value={employee.id}
-                                                onChange={handleChange}
+                                                value={id}
+                                                onChange={e =>{setId(e.target.value)}}
+                                                onBlur={() => handleBlur('id')}
+                                                error={touched.id && !id}
+                                                helperText={touched.id && !id ? "This field is required" : ""}
+                                                required
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -109,9 +155,12 @@ function AddStaff() {
                                                 label="Employee Name"
                                                 name="name"
                                                 variant="outlined"
-                                                value={employee.name}
-                                                onChange={handleChange}
-                                            />
+                                                value={name}
+                                                onChange={e =>{setName(e.target.value)}}   
+                                                onBlur={() => handleBlur('name')}
+                                                error={touched.name && !name}
+                                                helperText={touched.name && !name ? "This field is required" : ""}
+                                                required                                         />
                                         </Grid>
                                         <Grid item xs={6}>
                                             <TextField
@@ -120,9 +169,12 @@ function AddStaff() {
                                                 name="age"
                                                 variant="outlined"
                                                 type="number"
-                                                value={employee.age}
-                                                onChange={handleChange}
-                                            />
+                                                value={age}
+                                                onChange={e =>{setAge(e.target.value)}} 
+                                                onBlur={() => handleBlur('age')}
+                                                error={touched.age && !age}
+                                                helperText={touched.age && !age ? "This field is required" : ""}
+                                                required                                           />
                                         </Grid>
                                         <Grid item xs={6}>
                                             <TextField
@@ -131,9 +183,12 @@ function AddStaff() {
                                                 name="phone"
                                                 variant="outlined"
                                                 type="number"
-                                                value={employee.phone}
-                                                onChange={handleChange}
-                                            />
+                                                value={number}
+                                                onChange={e =>{setNumber(e.target.value)}} 
+                                                onBlur={() => handleBlur('number')}
+                                                error={touched.number && !number}
+                                                helperText={touched.number && !number ? "This field is required" : ""}
+                                                required                                           />
                                         </Grid>
                                         <Grid item xs={6}>
                                             <TextField
@@ -142,8 +197,12 @@ function AddStaff() {
                                                 label="Sex"
                                                 name="sex"
                                                 variant="outlined"
-                                                value={employee.sex}
-                                                onChange={handleChange}
+                                                value={sex}
+                                                onChange={e =>{setSex(e.target.value)}}
+                                                onBlur={() => handleBlur('sex')}
+                                                error={touched.sex && !sex}
+                                                helperText={touched.sex && !sex ? "This field is required" : ""}
+                                                required
                                             >
                                                 <MenuItem value="Male">Male</MenuItem>
                                                 <MenuItem value="Female">Female</MenuItem>
@@ -155,8 +214,12 @@ function AddStaff() {
                                                 label="Address"
                                                 name="address"
                                                 variant="outlined"
-                                                value={employee.address}
-                                                onChange={handleChange}
+                                                value={address}
+                                                onChange={e =>{setAddress(e.target.value)}}
+                                                onBlur={() => handleBlur('address')}
+                                                error={touched.address && !address}
+                                                helperText={touched.address && !address ? "This field is required" : ""}
+                                                required
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -167,8 +230,10 @@ function AddStaff() {
                                                 variant="outlined"
                                                 multiline
                                                 rows={4}
-                                                value={employee.description}
-                                                onChange={handleChange}
+                                                value={description}
+                                                onChange={e =>{setDescription(e.target.value)}}
+                                                onBlur={() => handleBlur('description')}
+                                                
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -183,7 +248,7 @@ function AddStaff() {
                                                         onClick={handleReset}>
                                                     Reset
                                                 </Button>
-                                                <Button type="submit" variant="contained" color="primary">
+                                                <Button type="submit" variant="contained" color="primary" disabled={isSubmitDisabled}>
                                                     Submit
                                                 </Button>
                                             </Box>
