@@ -19,6 +19,7 @@ import {
     IconButton
 } from '@mui/material';
 import axios, {Axios} from "axios";
+import {toast} from "react-toastify";
 
 function Dentist() {
 
@@ -36,6 +37,31 @@ function Dentist() {
             }).catch(error=>{
                 console.error('Axios error',error);
         })
+    }
+
+    const handleSuccess = (msg) =>
+        toast.success(msg, {
+            position:'top-right'
+        });
+
+    const deleteDentist=(userId)=>{
+        const confirmed=confirm("Are you sure you want to delete this dentist?");
+        if (confirmed){
+            fetch('http://localhost:3000/dentist/delete',{
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: userId })
+            })
+                .then(response=>{
+                    getDentist()
+                    handleSuccess('Successfully Deleted');
+
+                }).catch(error=>{
+                console.error('Axios error :',error);
+            })
+        }
     }
 
 
@@ -91,7 +117,7 @@ function Dentist() {
                                                                     <IconButton color="primary">
                                                                         <Edit />
                                                                     </IconButton>
-                                                                    <IconButton color="secondary">
+                                                                    <IconButton color="secondary" onClick={()=>deleteDentist(row.id)}>
                                                                         <Delete />
                                                                     </IconButton>
                                                                 </TableCell>
