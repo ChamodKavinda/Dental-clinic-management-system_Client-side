@@ -100,7 +100,7 @@ function Dashboard() {
 
         <>
 
-            <Header/>
+            <Header logout={Logout}/>
 
             <div className="main d-flex">
                 <div className="sidebarWrapper">
@@ -124,7 +124,6 @@ function Dashboard() {
                                             <Box>
                                                 <Typography variant="h5" align="left">150</Typography>
                                                 <Typography>Total Appointment</Typography>
-                                                <Button onClick={Logout}>logut</Button>
                                             </Box>
                                         </Paper>
                                     </Grid>
