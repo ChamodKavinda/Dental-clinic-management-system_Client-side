@@ -29,6 +29,15 @@ function AddDentist() {
     const [sex, setSex] = useState('');
     const [address, setAddress] = useState('');
     const [description, setDescription] = useState('');
+    const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+    useEffect(() => {
+        if (id && name && age && number && sex && address) {
+            setIsSubmitDisabled(false);
+        } else {
+            setIsSubmitDisabled(true);
+        }
+    }, [id, name, age, number, sex, address]);
 
     const handleReset = () => {
         setDentist({
@@ -210,7 +219,7 @@ function AddDentist() {
                                                         onClick={handleReset}>
                                                     Reset
                                                 </Button>
-                                                <Button type="submit" variant="contained" color="primary">
+                                                <Button type="submit" variant="contained" color="primary" disabled={isSubmitDisabled}>
                                                     Submit
                                                 </Button>
                                             </Box>
