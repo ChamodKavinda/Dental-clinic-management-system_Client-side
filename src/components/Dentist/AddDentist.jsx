@@ -2,6 +2,7 @@ import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
 import React, {useEffect,useState} from "react";
 import {useNavigate} from "react-router-dom";
+import axios, {Axios} from "axios";
 
 import {
     Container,
@@ -19,6 +20,14 @@ import {
 function AddDentist() {
 
     const [submitted, setSubmitted] = useState(false);
+
+    const [id, setId] = useState('');
+    const [name, setName] = useState('');
+    const [age, setAge] = useState('');
+    const [number, setNumber] = useState('');
+    const [sex, setSex] = useState('');
+    const [address, setAddress] = useState('');
+    const [description, setDescription] = useState('');
 
     const handleReset = () => {
         setDentist({
@@ -60,15 +69,26 @@ function AddDentist() {
         description: ''
     });
 
-    const handleChange = (e) => {
-        setDentist({
-            ...dentist,
-            [e.target.name]: e.target.value
-        });
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const payload={
+            id: id,
+            name: name,
+            age: age,
+            number: number,
+            sex: sex,
+            address: address,
+            description: description
+        };
+
+        axios.post('http://localhost:3000/dentist/save',payload)
+            .then(response=>{
+                console.log(response);
+            }).catch(error=>{
+                console.error('Axios error :',error)
+        })
 
         console.log(dentist);
     };
@@ -99,8 +119,8 @@ function AddDentist() {
                                                 label="Dentist ID"
                                                 name="id"
                                                 variant="outlined"
-                                                value={dentist.id}
-                                                onChange={handleChange}
+                                                value={id}
+                                                onChange={e =>setId(e.target.value)}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -109,8 +129,8 @@ function AddDentist() {
                                                 label="Dentist Name"
                                                 name="name"
                                                 variant="outlined"
-                                                value={dentist.name}
-                                                onChange={handleChange}
+                                                value={name}
+                                                onChange={e =>setName(e.target.value)}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -120,8 +140,8 @@ function AddDentist() {
                                                 name="age"
                                                 variant="outlined"
                                                 type="number"
-                                                value={dentist.age}
-                                                onChange={handleChange}
+                                                value={age}
+                                                onChange={e =>setAge(e.target.value)}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -131,8 +151,8 @@ function AddDentist() {
                                                 name="phone"
                                                 variant="outlined"
                                                 type="number"
-                                                value={dentist.phone}
-                                                onChange={handleChange}
+                                                value={number}
+                                                onChange={e =>setNumber(e.target.value)}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -142,8 +162,8 @@ function AddDentist() {
                                                 label="Sex"
                                                 name="sex"
                                                 variant="outlined"
-                                                value={dentist.sex}
-                                                onChange={handleChange}
+                                                value={sex}
+                                                onChange={e =>setSex(e.target.value)}
                                             >
                                                 <MenuItem value="Male">Male</MenuItem>
                                                 <MenuItem value="Female">Female</MenuItem>
@@ -155,8 +175,8 @@ function AddDentist() {
                                                 label="Address"
                                                 name="address"
                                                 variant="outlined"
-                                                value={dentist.address}
-                                                onChange={handleChange}
+                                                value={address}
+                                                onChange={e =>setAddress(e.target.value)}
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -167,8 +187,8 @@ function AddDentist() {
                                                 variant="outlined"
                                                 multiline
                                                 rows={4}
-                                                value={dentist.description}
-                                                onChange={handleChange}
+                                                value={description}
+                                                onChange={e =>setDescription(e.target.value)}
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
