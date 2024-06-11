@@ -2,7 +2,7 @@ import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
 import React, { useState } from "react";
 import {useNavigate} from 'react-router-dom';
-
+import {toast, ToastContainer} from "react-toastify";
 import { Edit, Delete } from '@mui/icons-material';
 import {
     Container,
@@ -28,18 +28,42 @@ function Staff() {
 
     useEffect(()=>{
         getAllEmployee();
-    })
+    },[])
 
     const getAllEmployee=()=>{
         axios.get('http://localhost:3000/employee/get')
         .then(response=>{
-            console.log(response);
             setEmployee(response.data || []);
         }).catch(error=>{
             console.error('axios error :',error);
         })
     }
 
+    const handleSuccess = (msg) =>
+        toast.success(msg, {
+            position:'top-right'
+        });
+
+    const deleteEmployee=(userId)=>{
+
+        const confirmed=confirm("Are you sure you want to delete this user?");
+        if (confirmed){
+            fetch('http://localhost:3000/employee/delete',{
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: userId })
+            })
+                .then(response=>{
+                    getAllEmployee()
+                    handleSuccess('Successfully Deleted');
+
+                }).catch(error=>{
+                    console.error('Axios error :',error);
+            })
+        }
+    }
 
 
     return (
@@ -57,7 +81,7 @@ function Staff() {
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                                 <Typography variant="h4">EMPLOYEE DETAILS</Typography>
                             </Box>
-
+                            <ToastContainer />
                             <Grid container spacing={2}>
                                 <Grid item xs={20}>
                                     <Box mt={-2}>
@@ -94,7 +118,7 @@ function Staff() {
                                                                     <IconButton color="primary">
                                                                         <Edit />
                                                                     </IconButton>
-                                                                    <IconButton color="secondary">
+                                                                    <IconButton color="secondary" onClick={()=>deleteEmployee(row.id)}>
                                                                         <Delete />
                                                                     </IconButton>
                                                                 </TableCell>
