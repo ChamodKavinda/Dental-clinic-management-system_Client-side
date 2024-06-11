@@ -14,6 +14,7 @@ import {
     MenuItem,
     Button
 } from '@mui/material';
+import {toast, ToastContainer} from "react-toastify";
 
 
 
@@ -71,6 +72,7 @@ function AddDentist() {
 
 
     const handleSubmit = (e) => {
+        handleSuccess('Saved Successfully');
         e.preventDefault();
 
         const payload={
@@ -93,6 +95,11 @@ function AddDentist() {
         console.log(dentist);
     };
 
+    const handleSuccess = (msg) =>
+        toast.success(msg, {
+            position:'top-right'
+        });
+
     return (
         <>
             <Header />
@@ -109,7 +116,7 @@ function AddDentist() {
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                                 <Typography variant="h4">ADD DENTIST</Typography>
                             </Box>
-
+                            <ToastContainer />
                             <Paper sx={{ p: 3 }}>
                                 <form onSubmit={handleSubmit}>
                                     <Grid container spacing={2}>
