@@ -1,6 +1,7 @@
 import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
-import React from "react";
+import React, { useState } from "react";
+import {useNavigate} from 'react-router-dom';
 
 import { Edit, Delete } from '@mui/icons-material';
 import {
@@ -18,46 +19,28 @@ import {
     Button,
     IconButton
 } from '@mui/material';
+import axios from "axios";
+import { useEffect } from "react";
 
 function Staff() {
-    const employee = [
-        {
-            id: 'P001',
-            name: 'M.Peter',
-            age: 25,
-            phone: '0768765456',
-            sex: 'Male',
-            address: 'Colombo',
-            description: 'Regular check-up'
-        },
-        {
-            id: 'P002',
-            name: 'M.Peter',
-            age: 25,
-            phone: '0768765456',
-            sex: 'Male',
-            address: 'Colombo',
-            description: 'Dental cleaning'
-        },
-        {
-            id: 'P003',
-            name: 'M.Peter',
-            age: 25,
-            phone: '0768765456',
-            sex: 'Male',
-            address: 'Colombo',
-            description: 'Cavity filling'
-        },
-        {
-            id: 'P004',
-            name: 'M.Peter',
-            age: 25,
-            phone: '0768765456',
-            sex: 'Male',
-            address: 'Colombo',
-            description: 'Tooth extraction'
-        }
-    ];
+    const [employee,setEmployee] = useState([]); 
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        getAllEmployee();
+    })
+
+    const getAllEmployee=()=>{
+        axios.get('http://localhost:3000/employee/get')
+        .then(response=>{
+            console.log(response);
+            setEmployee(response.data || []);
+        }).catch(error=>{
+            console.error('axios error :',error);
+        })
+    }
+
+
 
     return (
         <>
@@ -81,32 +64,32 @@ function Staff() {
                                         <Paper sx={{ p: 2 }}>
                                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                                                 <Typography variant="h6"></Typography>
-                                                <Button variant="contained" color="primary">Add Employee</Button>
+                                                <Button variant="contained" color="primary" onClick={()=>navigate('/addStaff')}>Add Employee</Button>
                                             </Box>
                                             <TableContainer component={Paper}>
                                                 <Table>
                                                     <TableHead>
                                                         <TableRow>
-                                                            <TableCell>Employee ID</TableCell>
-                                                            <TableCell>Employee Name</TableCell>
-                                                            <TableCell>Age</TableCell>
-                                                            <TableCell>Phone Number</TableCell>
-                                                            <TableCell>Sex</TableCell>
-                                                            <TableCell>Address</TableCell>
-                                                            <TableCell>Description</TableCell>
-                                                            <TableCell>Actions</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Employee ID</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Employee Name</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Age</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Phone Number</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Sex</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Address</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Description</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Actions</TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
-                                                        {employee.map((employee, index) => (
-                                                            <TableRow key={index}>
-                                                                <TableCell>{employee.id}</TableCell>
-                                                                <TableCell>{employee.name}</TableCell>
-                                                                <TableCell>{employee.age}</TableCell>
-                                                                <TableCell>{employee.phone}</TableCell>
-                                                                <TableCell>{employee.sex}</TableCell>
-                                                                <TableCell>{employee.address}</TableCell>
-                                                                <TableCell>{employee.description}</TableCell>
+                                                        {employee.length > 0 ? employee.map(row => (
+                                                            <TableRow key={row.id}>
+                                                                <TableCell>{row.id}</TableCell>
+                                                                <TableCell>{row.name}</TableCell>
+                                                                <TableCell>{row.age}</TableCell>
+                                                                <TableCell>{row.number}</TableCell>
+                                                                <TableCell>{row.sex}</TableCell>
+                                                                <TableCell>{row.address}</TableCell>
+                                                                <TableCell>{row.description}</TableCell>
                                                                 <TableCell>
                                                                     <IconButton color="primary">
                                                                         <Edit />
@@ -116,7 +99,11 @@ function Staff() {
                                                                     </IconButton>
                                                                 </TableCell>
                                                             </TableRow>
-                                                        ))}
+                                                        )):(
+                                                            <TableRow >
+                                                            <TableCell component='th' scope="row">No Data</TableCell>
+                                                            </TableRow>
+                                                        )}
                                                     </TableBody>
                                                 </Table>
                                             </TableContainer>
