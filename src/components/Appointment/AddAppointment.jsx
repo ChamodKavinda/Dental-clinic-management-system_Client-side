@@ -94,8 +94,7 @@ function AddAppointment() {
 
 
     const handleSubmit = (e) => {
-        handleSuccess('Saved Successfully');
-        handleReset();
+
         e.preventDefault();
 
         const payload = {
@@ -110,11 +109,28 @@ function AddAppointment() {
 
         Axios.post('http://localhost:3000/appointment/save', payload)
             .then(response => {
+
+                Axios.post('http://localhost:3000/api/sendEmail', {
+                    email: email,
+                    subject: 'Appointment Confirmation',
+                    message: `Dear patient, your appointment is scheduled on ${date} at ${time}.
+                    Thankyou for contacting Us!`
+                })
+                    .then(response => {
+                        console.log('Email sent successfully:', response);
+                    })
+                    .catch(error => {
+                        console.error('Error sending email:', error);
+                    });
+
                 console.log(response);
             }).catch(error => {
             console.error('Axios error :', error);
         });
         console.log(payload);
+
+        handleSuccess('Saved Successfully');
+        handleReset();
     };
 
     const handleBlur = (field) => {
@@ -173,9 +189,7 @@ function AddAppointment() {
                                                             {patients.id}
                                                         </MenuItem>
                                                     ))
-
                                                 }
-
                                             </TextField>
 
                                         </Grid>
