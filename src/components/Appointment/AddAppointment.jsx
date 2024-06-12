@@ -16,6 +16,7 @@ import {
     MenuItem,
     Button
 } from '@mui/material';
+import axios from "axios";
 
 function AddAppointment() {
     const [id, setId] = useState('');
@@ -25,6 +26,9 @@ function AddAppointment() {
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [description, setDescription] = useState('');
+
+    const [patient,setPatientData]=useState([]);
+    const [dentist,setDentistData]=useState([]);
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const [touched, setTouched] = useState({
@@ -42,7 +46,24 @@ function AddAppointment() {
             position:'top-right'
         });
 
+
+    const fetchAllData = async () => {
+        try {
+            const [patientsRes, dentistsRes] = await Promise.all([
+                axios.get('http://localhost:3000/patient/get'),
+                axios.get('http://localhost:3000/dentist/get'),
+            ]);
+
+            setPatientData(patientsRes.data || []);
+            setDentistData(dentistsRes.data || []);
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
     useEffect(() => {
+        fetchAllData();
         if (id && time && patientId && dentistId && email && date) {
             setIsSubmitDisabled(false);
         } else {
@@ -71,11 +92,12 @@ function AddAppointment() {
 
     const navigate = useNavigate();
 
+
     const handleSubmit = (e) => {
         handleSuccess('Saved Successfully');
-
         handleReset();
         e.preventDefault();
+
         const payload = {
             id: id,
             time: time,
@@ -145,8 +167,15 @@ function AddAppointment() {
                                                 helperText={touched.patientId && !patientId ? "This field is required" : ""}
                                                 required
                                             >
-                                                <MenuItem value="P001">P001</MenuItem>
-                                                <MenuItem value="P002">P002</MenuItem>
+                                                {
+                                                    patient.map(patients=>(
+                                                        <MenuItem value={patients.id} key={patients.id}>
+                                                            {patients.id}
+                                                        </MenuItem>
+                                                    ))
+
+                                                }
+
                                             </TextField>
 
                                         </Grid>
@@ -164,8 +193,14 @@ function AddAppointment() {
                                                 helperText={touched.dentistId && !dentistId ? "This field is required" : ""}
                                                 required
                                             >
-                                                <MenuItem value="D001">D001</MenuItem>
-                                                <MenuItem value="D002">D002</MenuItem>
+                                                {
+                                                    dentist.map(d=>(
+                                                        <MenuItem value={d.id} key={d.id}>
+                                                            {d.id}
+                                                        </MenuItem>
+                                                    ))
+
+                                                }
                                             </TextField>
                                         </Grid>
                                         <Grid item xs={6}>
