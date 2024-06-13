@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import {useNavigate} from 'react-router-dom';
 import {toast, ToastContainer} from "react-toastify";
 import { Edit, Delete } from '@mui/icons-material';
+import AddStaff from '../Staff/AddStaff';
+
 import {
     Container,
     Box,
@@ -22,9 +24,11 @@ import {
 import axios from "axios";
 import { useEffect } from "react";
 
+
 function Staff() {
     const [employee,setEmployee] = useState([]); 
     const navigate = useNavigate();
+    const [employeeModal,setEmployeeModal]=useState(false);
 
     useEffect(()=>{
         getAllEmployee();
@@ -65,6 +69,38 @@ function Staff() {
         }
     }
 
+   /* const updateEmployee=(userId)=>{
+        
+            employee.map(row=> {
+                const payload = {
+                    id: row.id,
+                    name:row.name,
+                    age:row.age,
+                    number:row.number,
+                    address:row.address,
+                    sex:row.sex,
+                    description:row.description
+
+                }
+
+
+                // axios.put('http://localhost:3000/employee/update',payload)
+                //     .then(response=>{
+                //         console.log(response);
+                //     }).catch(error=>{
+                //     console.log(error);
+                // })
+                navigate('/addStaff',{data:{payload}});
+            })
+
+        
+
+
+    }*/
+
+    const closeModal=()=>{
+        setEmployeeModal(false);
+    }
 
     return (
         <>
@@ -74,6 +110,8 @@ function Staff() {
                 <div className="sidebarWrapper">
                     <Sidebar />
                 </div>
+
+                {employeeModal && <AddStaff closeModal={closeModal}/>}
 
                 <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -88,7 +126,7 @@ function Staff() {
                                         <Paper sx={{ p: 2 }}>
                                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                                                 <Typography variant="h6"></Typography>
-                                                <Button variant="contained" color="primary" onClick={()=>navigate('/addStaff')}>Add Employee</Button>
+                                                <Button variant="contained" color="primary" onClick={()=>setEmployeeModal(true)}>Add Employee</Button>
                                             </Box>
                                             <TableContainer component={Paper}>
                                                 <Table>
@@ -115,10 +153,10 @@ function Staff() {
                                                                 <TableCell>{row.address}</TableCell>
                                                                 <TableCell>{row.description}</TableCell>
                                                                 <TableCell>
-                                                                    <IconButton color="primary">
+                                                                    <IconButton color="primary" onClick={()=>setEmployeeModal(true)}>
                                                                         <Edit />
                                                                     </IconButton>
-                                                                    <IconButton color="secondary" onClick={()=>deleteEmployee(row.id)}>
+                                                                    <IconButton color="error" onClick={()=>deleteEmployee(row.id)}>
                                                                         <Delete />
                                                                     </IconButton>
                                                                 </TableCell>
