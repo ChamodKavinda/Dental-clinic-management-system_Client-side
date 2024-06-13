@@ -19,7 +19,7 @@ import {
 
 
 
-function AddStaff() {
+function AddStaff({closeModal}) {
 
 
     const [id,setId] = useState('');
@@ -117,12 +117,12 @@ function AddStaff() {
 
     return (
         <>
-            <Header />
+            {/*<Header />*/}
 
             <div className="main d-flex">
-                <div className="sidebarWrapper">
+                {/*<div className="sidebarWrapper">
                     <Sidebar />
-                </div>
+                </div>*/}
 
 
                 <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
@@ -188,7 +188,8 @@ function AddStaff() {
                                                 onBlur={() => handleBlur('number')}
                                                 error={touched.number && !number}
                                                 helperText={touched.number && !number ? "This field is required" : ""}
-                                                required                                           />
+                                                required
+                                            />
                                         </Grid>
                                         <Grid item xs={6}>
                                             <TextField
@@ -240,7 +241,7 @@ function AddStaff() {
                                             <Box display="flex" justifyContent="flex-end">
 
                                                 <Button type="submit" variant="contained" color="secondary" sx={{marginRight:'720px'}}
-                                                        onClick={()=>navigate('/staff')}>
+                                                        onClick={closeModal}>
                                                     Back
                                                 </Button>
 
