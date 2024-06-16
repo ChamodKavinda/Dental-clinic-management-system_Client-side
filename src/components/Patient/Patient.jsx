@@ -1,6 +1,6 @@
 import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import { Edit, Delete } from '@mui/icons-material';
 
@@ -23,29 +23,45 @@ import {
 import Axios from "axios";
 import {toast, ToastContainer} from "react-toastify";
 import UpdatePatient from "../Patient/updatePatient";
+import axios from "axios";
+import {useCookies} from "react-cookie";
 
 
 function Patient() {
 
     const navigate=useNavigate();
     const [patient,setPatient]=useState([]);
-
+    const [username, setUsername] = useState("");
+    const [cookies, removeCookie] = useCookies([]);
     const [open, setOpen] = useState(false);
-
     const [selectedPatient, setSelectedPatient] = useState(null);
-
-    const [id, setId] = useState('');
-    const [name, setName] = useState('');
-    const [age, setAge] = useState('');
-    const [number, setNumber] = useState('');
-    const [sex, setSex] = useState('');
-    const [address, setAddress] = useState('');
-    const [description, setDescription] = useState('');
-
 
     useEffect(()=>{
         getPatient();
-    },[]);
+
+        const verifyCookie = async () => {
+            if (!cookies.token) {
+                /*navigate("/login");*/
+            }
+            const { data } = await axios.post(
+                "http://localhost:3000",
+                {},
+                { withCredentials: true }
+            );
+            const { status, user } = data;
+            console.log(data)
+            setUsername(user);
+            if (!status){
+                (removeCookie("token"), navigate("/login"));
+            }
+
+        };
+        verifyCookie();
+    },[],[cookies, navigate, removeCookie]);
+    const Logout = () => {
+        removeCookie("token");
+        navigate("/home");
+    };
 
     const handleSuccess = (msg) =>
         toast.success(msg, {
@@ -59,26 +75,6 @@ function Patient() {
             }).catch(error=>{
                 console.error("Axios error :",error)
         })
-    }
-    const updatePatient=()=>{
-
-
-       /* const payload={
-            id:id,
-            name:name,
-            age:age,
-            number:number,
-            sex:sex,
-            address:address,
-            description:description
-        }
-
-        axios.put('http://localhost:3000/dentist/update',payload)
-            .then(response=>{
-                getPatient();
-            }).catch(error=>{
-                console.error('axios error :',error);
-        })*/
     }
 
     const deletePatient=(userId)=>{
@@ -116,7 +112,7 @@ function Patient() {
 
     return (
         <>
-            <Header />
+            <Header logout={Logout}/>
 
             <div className="main d-flex">
                 <div className="sidebarWrapper">
@@ -190,9 +186,9 @@ function Patient() {
             </div>
 
             <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
-                <DialogTitle>Patient Employee</DialogTitle>
+                <DialogTitle>Update Patient</DialogTitle>
                 <DialogContent>
-                    <UpdatePatient payload={selectedPatient} onClose={handleClose} getPatient={getPatient()}/>
+                    <UpdatePatient payload={selectedPatient} onClose={handleClose}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
