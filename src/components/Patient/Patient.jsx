@@ -4,8 +4,6 @@ import React, {useEffect, useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import { Edit, Delete } from '@mui/icons-material';
 
-import Alert from '@mui/material/Alert';
-import CheckIcon from '@mui/icons-material/Check';
 
 import {
     Container,
@@ -20,22 +18,39 @@ import {
     TableHead,
     TableRow,
     Button,
-    IconButton
+    IconButton, DialogTitle, DialogContent, DialogActions, Dialog
 } from '@mui/material';
 import Axios from "axios";
+import {toast, ToastContainer} from "react-toastify";
+import UpdatePatient from "../Patient/updatePatient";
+
 
 function Patient() {
 
     const navigate=useNavigate();
     const [patient,setPatient]=useState([]);
-    const [alertOpen, setAlertOpen] = useState(false);
 
+    const [open, setOpen] = useState(false);
+
+    const [selectedPatient, setSelectedPatient] = useState(null);
+
+    const [id, setId] = useState('');
+    const [name, setName] = useState('');
+    const [age, setAge] = useState('');
+    const [number, setNumber] = useState('');
+    const [sex, setSex] = useState('');
+    const [address, setAddress] = useState('');
+    const [description, setDescription] = useState('');
 
 
     useEffect(()=>{
         getPatient();
     },[]);
 
+    const handleSuccess = (msg) =>
+        toast.success(msg, {
+            position:'top-right'
+        });
 
     const getPatient=()=>{
         Axios.get('http://localhost:3000/patient/get')
@@ -45,7 +60,26 @@ function Patient() {
                 console.error("Axios error :",error)
         })
     }
+    const updatePatient=()=>{
 
+
+       /* const payload={
+            id:id,
+            name:name,
+            age:age,
+            number:number,
+            sex:sex,
+            address:address,
+            description:description
+        }
+
+        axios.put('http://localhost:3000/dentist/update',payload)
+            .then(response=>{
+                getPatient();
+            }).catch(error=>{
+                console.error('axios error :',error);
+        })*/
+    }
 
     const deletePatient=(userId)=>{
 
@@ -60,14 +94,23 @@ function Patient() {
             })
                 .then(response=>{
                     getPatient()
-                    setAlertOpen(true);
-                    setTimeout(() => setAlertOpen(false), 3000);
+                    handleSuccess('Successfully Deleted');
 
                 }).catch(error=>{
                     console.error('Axios error :',error);
             })
         }
     }
+
+    const handleClickOpen = (patient = null) => {
+        setSelectedPatient(patient);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        getPatient();
+    };
 
 
 
@@ -86,13 +129,7 @@ function Patient() {
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                                 <Typography variant="h4">PATIENT DETAILS</Typography>
                             </Box>
-
-                            {alertOpen && (
-                                <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
-                                    Deleted
-                                </Alert>
-                            )}
-
+                            <ToastContainer />
                             <Grid container spacing={2}>
                                 <Grid item xs={20}>
                                     <Box mt={-2}>
@@ -104,15 +141,15 @@ function Patient() {
                                             <TableContainer component={Paper}>
                                                 <Table>
                                                     <TableHead>
-                                                        <TableRow>
-                                                            <TableCell>Patient ID</TableCell>
-                                                            <TableCell>Patient Name</TableCell>
-                                                            <TableCell>Age</TableCell>
-                                                            <TableCell>Phone Number</TableCell>
-                                                            <TableCell>Sex</TableCell>
-                                                            <TableCell>Address</TableCell>
-                                                            <TableCell>Description</TableCell>
-                                                            <TableCell>Actions</TableCell>
+                                                        <TableRow >
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Patient ID</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Patient Name</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Age</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Phone Number</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Sex</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Address</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Description</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Actions</TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
@@ -126,10 +163,10 @@ function Patient() {
                                                                 <TableCell component='th' scope="row">{row.address}</TableCell>
                                                                 <TableCell component='th' scope="row">{row.description}</TableCell>
                                                                 <TableCell>
-                                                                    <IconButton color="primary">
+                                                                    <IconButton color="primary" onClick={()=>handleClickOpen(row)}>
                                                                         <Edit />
                                                                     </IconButton>
-                                                                    <IconButton color="secondary" onClick={()=>deletePatient(row.id)} >
+                                                                    <IconButton color="error" onClick={()=>deletePatient(row.id)} >
                                                                         <Delete />
                                                                     </IconButton>
                                                                 </TableCell>
@@ -151,6 +188,17 @@ function Patient() {
                     </Box>
                 </Box>
             </div>
+
+            <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
+                <DialogTitle>Patient Employee</DialogTitle>
+                <DialogContent>
+                    <UpdatePatient payload={selectedPatient} onClose={handleClose} getPatient={getPatient()}/>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                </DialogActions>
+            </Dialog>
+
         </>
     );
 }
