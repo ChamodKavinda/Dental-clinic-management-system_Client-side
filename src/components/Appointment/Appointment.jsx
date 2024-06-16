@@ -1,6 +1,6 @@
 import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import { Edit, Delete } from '@mui/icons-material';
 import {
@@ -21,18 +21,43 @@ import {
 import axios from "axios";
 import {toast, ToastContainer} from "react-toastify";
 import UpdateAppointment from "../Appointment/updateAppointment";
+import {useCookies} from "react-cookie";
 
 function Appointment() {
 
     const navigate = useNavigate();
     const [appointment,setAppointment]=useState([]);
-
+    const [cookies, removeCookie] = useCookies([]);
     const [open, setOpen] = useState(false);
     const [selectedAppointment, setSelectedAppointment] = useState(null);
+    const [username, setUsername] = useState("");
 
     useEffect(()=>{
         getAppointment();
-    },[])
+        const verifyCookie = async () => {
+            if (!cookies.token) {
+                /*navigate("/login");*/
+            }
+            const { data } = await axios.post(
+                "http://localhost:3000",
+                {},
+                { withCredentials: true }
+            );
+            const { status, user } = data;
+            console.log(data)
+            setUsername(user);
+            if (!status){
+                (removeCookie("token"), navigate("/login"));
+            }
+
+        };
+        verifyCookie();
+
+    },[],[cookies, navigate, removeCookie])
+    const Logout = () => {
+        removeCookie("token");
+        navigate("/home");
+    };
 
     const getAppointment=()=>{
         axios.get('http://localhost:3000/appointment/get')
@@ -80,7 +105,7 @@ function Appointment() {
 
     return (
         <>
-            <Header />
+            <Header  logout={Logout}/>
 
             <div className="main d-flex">
                 <div className="sidebarWrapper">
@@ -156,7 +181,7 @@ function Appointment() {
             <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
                 <DialogTitle>Update Appointment</DialogTitle>
                 <DialogContent>
-                    <UpdateAppointment payload={selectedAppointment} onClose={handleClose} getAppointment={getAppointment()}/>
+                    <UpdateAppointment payload={selectedAppointment} onClose={handleClose}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
