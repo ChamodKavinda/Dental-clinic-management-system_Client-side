@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import {useNavigate} from 'react-router-dom';
 import {toast, ToastContainer} from "react-toastify";
 import { Edit, Delete } from '@mui/icons-material';
-import AddStaff from '../Staff/AddStaff';
 import UpdateStaff from "./updateStaff";
 
 import {
@@ -24,22 +23,45 @@ import {
 } from '@mui/material';
 import axios from "axios";
 import { useEffect } from "react";
+import {useCookies} from "react-cookie";
 
 
 function Staff() {
     const [employee,setEmployee] = useState([]); 
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
-
+    const [username, setUsername] = useState("");
+    const [cookies, removeCookie] = useCookies([]);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
 
 
     useEffect(()=>{
         getAllEmployee();
 
-    },[])
+        const verifyCookie = async () => {
+            if (!cookies.token) {
+                /*navigate("/login");*/
+            }
+            const { data } = await axios.post(
+                "http://localhost:3000",
+                {},
+                { withCredentials: true }
+            );
+            const { status, user } = data;
+            console.log(data)
+            setUsername(user);
+            if (!status){
+                (removeCookie("token"), navigate("/login"));
+            }
 
+        };
+        verifyCookie();
 
+    },[],[cookies, navigate, removeCookie])
+    const Logout = () => {
+        removeCookie("token");
+        navigate("/home");
+    };
 
     const getAllEmployee=()=>{
         axios.get('http://localhost:3000/employee/get')
@@ -89,7 +111,7 @@ function Staff() {
 
     return (
         <>
-            <Header />
+            <Header logout={Logout}/>
 
             <div className="main d-flex">
                 <div className="sidebarWrapper">
