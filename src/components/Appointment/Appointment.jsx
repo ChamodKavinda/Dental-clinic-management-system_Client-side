@@ -1,326 +1,170 @@
 import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
-import {useEffect, useState} from "react";
-import Axios from "axios";
-
-
+import React, {useEffect, useState} from "react";
+import {useNavigate} from 'react-router-dom';
+import { Edit, Delete } from '@mui/icons-material';
 import {
-    Grid,
-    Typography,
-    Input,
-    Button,
-    TableContainer,
+    Container,
+    Box,
     Paper,
+    Typography,
+    Grid,
     Table,
-    TableRow,
+    TableBody,
     TableCell,
-    TableHead, TableBody
-} from "@mui/material";
+    TableContainer,
+    TableHead,
+    TableRow,
+    Button,
+    IconButton, DialogTitle, DialogContent, DialogActions, Dialog
+} from '@mui/material';
+import axios from "axios";
+import {toast, ToastContainer} from "react-toastify";
+import UpdateAppointment from "../Appointment/updateAppointment";
 
-const Appointment = () =>{
+function Appointment() {
 
-    const [id,setId]=useState(0);
-    const [patient,setPatient]=useState('');
-    const [dentist,setDentist]=useState('');
-    const [date,setDate]=useState('');
-    const [time,setTime]=useState('');
-    const [isEdit,setIsEdit]=useState(false);
-
+    const navigate = useNavigate();
     const [appointment,setAppointment]=useState([]);
-    const [submitted, setSubmitted] = useState(false);
 
-
-    useEffect(()=>{
-        if (!submitted){
-            setId(0);
-            setPatient('');
-            setDentist('');
-            setDate('');
-            setTime('');
-        }
-    },[submitted]);
+    const [open, setOpen] = useState(false);
+    const [selectedAppointment, setSelectedAppointment] = useState(null);
 
     useEffect(()=>{
         getAppointment();
-    },[]);
+    },[])
 
-
-    const setSelectedAppointment = (appointment)=>{
-        setId(appointment.id);
-        setPatient(appointment.patient);
-        setDentist(appointment.dentist);
-        setDate(appointment.date);
-        setTime(appointment.time);
-
-        setIsEdit(true);
-
-    };
-
-    const getAppointment = ()=>{
-        Axios.get('http://localhost:3000/appointment/get')
-            .then(response =>{
+    const getAppointment=()=>{
+        axios.get('http://localhost:3000/appointment/get')
+            .then(response=>{
                 setAppointment(response.data || []);
-            }).catch(error =>{
-                console.error("Axios error :",error)
+            }).catch(error=>{
+            console.error('Axios error',error);
+        })
+    }
+
+    const handleSuccess = (msg) =>
+        toast.success(msg, {
+            position:'top-right'
         });
-    }
 
-
-    const saveAppointment = () => {
-        setSubmitted(true);
-
-        const payload = {
-            id: id,
-            patient: patient,
-            dentist: dentist,
-            date: date,
-            time: time
-        };
-
-        Axios.post('http://localhost:3000/appointment/save', payload)
-            .then(response => {
-                getAppointment();
-                setSubmitted(false);
-                setIsEdit(false);
-            })
-            .catch(error => {
-                console.error("Axios error :", error)
-            });
-    }
-
-        const updateAppointment = ()=>{
-            setSubmitted(true);
-
-
-            const payload = {
-                id: id,
-                patient: patient,
-                dentist: dentist,
-                date: date,
-                time: time
-            };
-
-            Axios.put('http://localhost:3000/appointment/update', payload)
-                .then(response => {
-                    getAppointment();
-                    setSubmitted(false);
-                    setIsEdit(false);
-                })
-                .catch(error => {
-                    console.error("Axios error :", error)
-                });
-        }
-
-
-        const deleteAppointment = (userId)=>{
-
-
-        const confirmed = confirm("Are you sure you want to delete this user?");
-
+    const deleteAppointment=(userId)=>{
+        const confirmed=confirm("Are you sure you want to delete this appointment?");
         if (confirmed){
-            fetch('http://localhost:3000/appointment/delete', {
+            fetch('http://localhost:3000/appointment/delete',{
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ userId: userId })
             })
-                .then(response =>{
-                    getAppointment();
+                .then(response=>{
+                    getAppointment()
+                    handleSuccess('Successfully Deleted');
 
                 }).catch(error=>{
-                console.error("Axios error :", error)
-            });
+                console.error('Axios error :',error);
+            })
         }
-
-
     }
 
+    const handleClickOpen = (appointment = null) => {
+        setSelectedAppointment(appointment);
+        setOpen(true);
+    };
 
-    return(
+    const handleClose = () => {
+        setOpen(false);
+        getAppointment();
+    };
+
+    return (
         <>
-            <Header/>
+            <Header />
 
             <div className="main d-flex">
                 <div className="sidebarWrapper">
-                    <Sidebar/>
+                    <Sidebar />
                 </div>
 
-
-                <div className="right-content w-100">
-                    <div className="row dashboardBoxWrapperRow">
-                        <div className="col-md-9">
-                            <div className="dashboardBoxWrapper d-flex">
-
-                                <Grid
-                                    container
-                                    spacing={1}
-                                    sx={{
-                                        backgroundColor:'white',
-                                        marginBottom:'30px',
-                                        display:'block',
-                                    }}
-                                >
-                                    <Grid item xs={12} sm={6} sx={{display:'flex'}}>
-                                        <Typography component={'h1'} sx={{color:'#000000',paddingBottom:'10px'}}>Add Appointment</Typography>
-                                    </Grid>
-
-                                    <Grid>
-                                        <Typography component={'label'} htmlFor="id" sx={{color:'#000000',marginRight:'20px',fontSize:'15px',width:'100px',display:'block'}}>
-                                            ID
-                                        </Typography>
-                                        <Input
-                                            type="number"
-                                            id='id'
-                                            name="id"
-                                            sx={{width:'400px'}}
-                                            value={id}
-                                            onChange={e => setId(e.target.value)}
-                                        />
-                                    </Grid>
-
-
-                                    <Grid>
-                                        <Typography component={'label'} htmlFor="id" sx={{color:'#000000',marginRight:'20px',fontSize:'15px',width:'100px',display:'block'}}>
-                                            Patient Name
-                                        </Typography>
-                                        <Input
-                                            type="String"
-                                            id='patient'
-                                            name="patient"
-                                            sx={{width:'400px'}}
-                                            value={patient}
-                                            onChange={e => setPatient(e.target.value)}
-                                        />
-                                    </Grid>
-
-                                    <Grid>
-                                        <Typography component={'label'} htmlFor="id" sx={{color:'#000000',marginRight:'20px',fontSize:'15px',width:'100px',display:'block'}}>
-                                            Dentist
-                                        </Typography>
-                                        <Input
-                                            type="String"
-                                            id='dentist'
-                                            name="dentist"
-                                            sx={{width:'400px'}}
-                                            value={dentist}
-                                            onChange={e => setDentist(e.target.value)}
-                                        />
-                                    </Grid>
-
-                                    <Grid>
-                                        <Typography component={'label'} htmlFor="id" sx={{color:'#000000',marginRight:'20px',fontSize:'15px',width:'100px',display:'block'}}>
-                                            Date
-                                        </Typography>
-                                        <Input
-                                            type="date"
-                                            id='name'
-                                            name="name"
-                                            sx={{width:'400px'}}
-                                            value={date}
-                                            onChange={e => setDate(e.target.value)}
-                                        />
-                                    </Grid>
-
-
-                                    <Grid>
-                                        <Typography component={'label'} htmlFor="time" sx={{color:'#000000',marginRight:'20px',fontSize:'15px',width:'100px',display:'block'}}>
-                                            Time
-                                        </Typography>
-                                        <Input
-                                            type="time"
-                                            id='name'
-                                            name="name"
-                                            sx={{width:'400px'}}
-                                            value={time}
-                                            onChange={e => setTime(e.target.value)}
-                                        />
-                                    </Grid>
-
-
+                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
+                    <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                        <Container maxWidth="lg">
+                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+                                <Typography variant="h4">APPOINTMENT DETAILS</Typography>
+                            </Box>
+                            <ToastContainer />
+                            <Grid container spacing={2}>
+                                <Grid item xs={20}>
+                                    <Box mt={-2}>
+                                        <Paper sx={{ p: 2 }}>
+                                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                                                <Typography variant="h6"></Typography>
+                                                <Button variant="contained" color="primary" onClick={()=>navigate('/addAppointment') }>Add Appointment</Button>
+                                            </Box>
+                                            <TableContainer component={Paper}>
+                                                <Table>
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Appointment ID</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Patient ID</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Dentist ID</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Date</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Time</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Email</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Description</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Actions</TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {appointment.length > 0 ? appointment.map(row=> (
+                                                            <TableRow key={row.id}>
+                                                                <TableCell component='th' scope="row">{row.id}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.patientId}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.dentistId}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.date}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.time}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.email}</TableCell>
+                                                                <TableCell component='th' scope="row">{row.description}</TableCell>
+                                                                <TableCell>
+                                                                    <IconButton color="primary" onClick={()=>handleClickOpen(row)}>
+                                                                        <Edit />
+                                                                    </IconButton>
+                                                                    <IconButton color="error" onClick={()=>deleteAppointment(row.id)}>
+                                                                        <Delete />
+                                                                    </IconButton>
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        )):(
+                                                            <TableRow >
+                                                                <TableCell>No Data</TableCell>
+                                                            </TableRow>
+                                                        )
+                                                        }
+                                                    </TableBody>
+                                                </Table>
+                                            </TableContainer>
+                                        </Paper>
+                                    </Box>
                                 </Grid>
-
-                                <Button
-                                    sx={{
-                                        margin:'auto',
-                                        marginBottom:'20px',
-                                        backgroundColor:'#00c6e6',
-                                        color:'#000000',
-                                        marginLeft:'0px',
-                                        '&:hover':{
-                                            opacity:'0.8',
-                                            backgroundColor:'#00c6e6'
-                                        }
-                                    }}
-                                    onClick={()=> isEdit ? updateAppointment() : saveAppointment()}
-                                >
-                                    {
-                                        isEdit ? 'Update Appointment' : 'Add Appointment'
-                                    }
-                                </Button>
-
-
-                                <TableContainer component={Paper}>
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell>ID</TableCell>
-                                                <TableCell>Name</TableCell>
-                                                <TableCell>Dentist</TableCell>
-                                                <TableCell>Date</TableCell>
-                                                <TableCell>Time</TableCell>
-                                                <TableCell>Actions</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-
-                                        <TableBody>
-
-                                            {
-                                                appointment.length > 0 ? appointment.map(row =>(
-                                                    <TableRow key={row.id}>
-                                                        <TableCell component='th' scope="row">{row.id}</TableCell>
-                                                        <TableCell component='th' scope="row">{row.patient}</TableCell>
-                                                        <TableCell component='th' scope="row">{row.dentist}</TableCell>
-                                                        <TableCell component='th' scope="row">{row.date}</TableCell>
-                                                        <TableCell component='th' scope="row">{row.time}</TableCell>
-                                                        <TableCell>
-                                                            <Button
-                                                                sx={{margin:'0px 10px'}}
-                                                                onClick={()=>{setSelectedAppointment(row)}}
-                                                            >
-                                                                Update
-                                                            </Button>
-
-                                                            <Button
-                                                                sx={{margin:'0px 10px'}}
-                                                                onClick={()=>deleteAppointment(row.id)}
-                                                            >
-                                                                Delete
-                                                            </Button>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                )) : (
-                                                    <TableRow >
-                                                        <TableCell component='th' scope="row">No Data</TableCell>
-                                                    </TableRow>
-                                                )
-                                            }
-
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-
+                            </Grid>
+                        </Container>
+                    </Box>
+                </Box>
             </div>
+
+            <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
+                <DialogTitle>Update Appointment</DialogTitle>
+                <DialogContent>
+                    <UpdateAppointment payload={selectedAppointment} onClose={handleClose} getAppointment={getAppointment()}/>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                </DialogActions>
+            </Dialog>
+
         </>
     );
 }
 
-export default Appointment
+export default Appointment;
