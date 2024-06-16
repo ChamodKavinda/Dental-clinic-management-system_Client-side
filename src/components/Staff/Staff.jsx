@@ -5,6 +5,7 @@ import {useNavigate} from 'react-router-dom';
 import {toast, ToastContainer} from "react-toastify";
 import { Edit, Delete } from '@mui/icons-material';
 import AddStaff from '../Staff/AddStaff';
+import UpdateStaff from "./updateStaff";
 
 import {
     Container,
@@ -19,7 +20,7 @@ import {
     TableHead,
     TableRow,
     Button,
-    IconButton
+    IconButton, Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 import axios from "axios";
 import { useEffect } from "react";
@@ -28,11 +29,17 @@ import { useEffect } from "react";
 function Staff() {
     const [employee,setEmployee] = useState([]); 
     const navigate = useNavigate();
-    const [employeeModal,setEmployeeModal]=useState(false);
+    const [open, setOpen] = useState(false);
+
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
+
 
     useEffect(()=>{
         getAllEmployee();
+
     },[])
+
+
 
     const getAllEmployee=()=>{
         axios.get('http://localhost:3000/employee/get')
@@ -69,38 +76,16 @@ function Staff() {
         }
     }
 
-   /* const updateEmployee=(userId)=>{
-        
-            employee.map(row=> {
-                const payload = {
-                    id: row.id,
-                    name:row.name,
-                    age:row.age,
-                    number:row.number,
-                    address:row.address,
-                    sex:row.sex,
-                    description:row.description
 
-                }
+    const handleClickOpen = (employee = null) => {
+        setSelectedEmployee(employee);
+        setOpen(true);
+    };
 
-
-                // axios.put('http://localhost:3000/employee/update',payload)
-                //     .then(response=>{
-                //         console.log(response);
-                //     }).catch(error=>{
-                //     console.log(error);
-                // })
-                navigate('/addStaff',{data:{payload}});
-            })
-
-        
-
-
-    }*/
-
-    const closeModal=()=>{
-        setEmployeeModal(false);
-    }
+    const handleClose = () => {
+        setOpen(false);
+        getAllEmployee();
+    };
 
     return (
         <>
@@ -110,8 +95,6 @@ function Staff() {
                 <div className="sidebarWrapper">
                     <Sidebar />
                 </div>
-
-                {employeeModal && <AddStaff closeModal={closeModal}/>}
 
                 <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -126,7 +109,7 @@ function Staff() {
                                         <Paper sx={{ p: 2 }}>
                                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                                                 <Typography variant="h6"></Typography>
-                                                <Button variant="contained" color="primary" onClick={()=>setEmployeeModal(true)}>Add Employee</Button>
+                                                <Button variant="contained" color="primary" onClick={()=>navigate('/addStaff')}>Add Employee</Button>
                                             </Box>
                                             <TableContainer component={Paper}>
                                                 <Table>
@@ -153,7 +136,7 @@ function Staff() {
                                                                 <TableCell>{row.address}</TableCell>
                                                                 <TableCell>{row.description}</TableCell>
                                                                 <TableCell>
-                                                                    <IconButton color="primary" onClick={()=>setEmployeeModal(true)}>
+                                                                    <IconButton color="primary" onClick={()=>handleClickOpen(row)}>
                                                                         <Edit />
                                                                     </IconButton>
                                                                     <IconButton color="error" onClick={()=>deleteEmployee(row.id)}>
@@ -177,6 +160,16 @@ function Staff() {
                     </Box>
                 </Box>
             </div>
+
+            <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
+                <DialogTitle>Update Employee</DialogTitle>
+                <DialogContent>
+                    <UpdateStaff payload={selectedEmployee} onClose={handleClose}/>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }
