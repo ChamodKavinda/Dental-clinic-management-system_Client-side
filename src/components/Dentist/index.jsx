@@ -16,18 +16,23 @@ import {
     TableHead,
     TableRow,
     Button,
-    IconButton
+    IconButton, DialogTitle, DialogContent, DialogActions, Dialog
 } from '@mui/material';
 import axios, {Axios} from "axios";
 import {toast} from "react-toastify";
+import UpdateDentist from "../Dentist/updateDentist";
 
 function Dentist() {
 
     const navigate = useNavigate();
     const [dentist,setDentist]=useState([]);
 
+    const [open, setOpen] = useState(false);
+    const [selectedDentist, setSelectedDentist] = useState(null);
+
     useEffect(()=>{
         getDentist();
+
     },[])
 
     const getDentist=()=>{
@@ -63,6 +68,16 @@ function Dentist() {
             })
         }
     }
+
+    const handleClickOpen = (dentist = null) => {
+        setSelectedDentist(dentist);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        getDentist();
+    };
 
 
     return (
@@ -114,10 +129,10 @@ function Dentist() {
                                                                 <TableCell component='th' scope="row">{row.address}</TableCell>
                                                                 <TableCell component='th' scope="row">{row.description}</TableCell>
                                                                 <TableCell>
-                                                                    <IconButton color="primary">
+                                                                    <IconButton color="primary" onClick={()=>handleClickOpen(row)}>
                                                                         <Edit />
                                                                     </IconButton>
-                                                                    <IconButton color="secondary" onClick={()=>deleteDentist(row.id)}>
+                                                                    <IconButton color="error" onClick={()=>deleteDentist(row.id)}>
                                                                         <Delete />
                                                                     </IconButton>
                                                                 </TableCell>
@@ -139,6 +154,17 @@ function Dentist() {
                     </Box>
                 </Box>
             </div>
+
+            <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
+                <DialogTitle>Update Dentist</DialogTitle>
+                <DialogContent>
+                    <UpdateDentist payload={selectedDentist} onClose={handleClose} getDentist={getDentist()}/>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                </DialogActions>
+            </Dialog>
+
         </>
     );
 }
