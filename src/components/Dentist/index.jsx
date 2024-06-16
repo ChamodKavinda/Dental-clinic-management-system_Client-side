@@ -1,6 +1,7 @@
 import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
-import React, {useEffect, useState} from "react";
+import {useState} from "react";
+import {useEffect} from "react";
 import {useNavigate} from 'react-router-dom';
 import { Edit, Delete } from '@mui/icons-material';
 import {
@@ -21,19 +22,44 @@ import {
 import axios, {Axios} from "axios";
 import {toast} from "react-toastify";
 import UpdateDentist from "../Dentist/updateDentist";
+import {useCookies} from "react-cookie";
 
 function Dentist() {
 
     const navigate = useNavigate();
     const [dentist,setDentist]=useState([]);
-
+    const [cookies, removeCookie] = useCookies([]);
     const [open, setOpen] = useState(false);
     const [selectedDentist, setSelectedDentist] = useState(null);
+    const [username, setUsername] = useState("");
 
     useEffect(()=>{
         getDentist();
 
-    },[])
+        const verifyCookie = async () => {
+            if (!cookies.token) {
+                /*navigate("/login");*/
+            }
+            const { data } = await axios.post(
+                "http://localhost:3000",
+                {},
+                { withCredentials: true }
+            );
+            const { status, user } = data;
+            console.log(data)
+            setUsername(user);
+            if (!status){
+                (removeCookie("token"), navigate("/login"));
+            }
+
+        };
+        verifyCookie();
+    },[],[cookies, navigate, removeCookie])
+
+    const Logout = () => {
+        removeCookie("token");
+        navigate("/home");
+    };
 
     const getDentist=()=>{
         axios.get('http://localhost:3000/dentist/get')
@@ -82,7 +108,7 @@ function Dentist() {
 
     return (
         <>
-            <Header />
+            <Header logout={Logout}/>
 
             <div className="main d-flex">
                 <div className="sidebarWrapper">
@@ -158,7 +184,7 @@ function Dentist() {
             <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
                 <DialogTitle>Update Dentist</DialogTitle>
                 <DialogContent>
-                    <UpdateDentist payload={selectedDentist} onClose={handleClose} getDentist={getDentist()}/>
+                    <UpdateDentist payload={selectedDentist} onClose={handleClose} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
