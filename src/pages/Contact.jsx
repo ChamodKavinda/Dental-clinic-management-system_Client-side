@@ -1,13 +1,18 @@
-import React from 'react';
+
 import { AppBar, Toolbar, Typography, IconButton, TextField, Button, Box , Modal } from '@mui/material';
 import { CgMenuRightAlt } from "react-icons/cg";
 import logo from '../assets/teeth.png'; 
 import { useState } from 'react';
 import Navbar from '../global/Navbar';
+import emailjs from '@emailjs/browser';
+import React, { useRef } from 'react';
 
 const Contact = () => {
 
     const [modalOpen, setModalOpen] = useState(false);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
 
     const handleOpenModal = () => {
       setModalOpen(true);
@@ -15,6 +20,32 @@ const Contact = () => {
   
     const handleCloseModal = () => {
       setModalOpen(false);
+    };
+
+    const form = useRef();
+
+    const handleSubmit = (e) =>{
+        e.preventDefault();
+        const serviceId = "service_ye50jdi";
+        const templateId = "template_9yrt9u9";
+        const publicKey = "6sxhfn4uG-nQPCpgh";
+
+        const templateParams={
+            from_name:name,
+            from_email:email,
+            to_name:'dentalcarepro0@gmail.com',
+            message:message
+        }
+
+        emailjs.send(serviceId,templateId,templateParams,publicKey)
+            .then((response)=>{
+                console.log("email sent success ",response);
+                setName('');
+                setEmail('');
+                setMessage('');
+            }).catch((error) =>{
+                console.error(error);
+        })
     };
 
   return (
@@ -38,15 +69,17 @@ const Contact = () => {
       </Modal>
 
 
+        <form onSubmit={handleSubmit}>
       <Box display="flex" justifyContent="center" alignItems="flex-start" padding={3}>
         <Box component="form" sx={{ width: '40%', marginRight: 4,marginLeft:'-300px' }}>
           <Typography variant="h5" sx={{fontWeight:800}} gutterBottom>PROBLEMS?</Typography>
           <Typography variant="h5" sx={{fontWeight:800}} gutterBottom>WE'RE HERE TO HELP YOU.</Typography>
-          <TextField label="First name" fullWidth margin="normal" />
-          <TextField label="Last name" fullWidth margin="normal" />
-          <TextField label="Email" fullWidth margin="normal" />
-          <TextField label="Message" fullWidth margin="normal" multiline rows={4} />
-          <Button variant="contained" color="primary" type="submit" fullWidth>Submit</Button>
+
+          <TextField label="Full Name" fullWidth margin="normal" value={name} onChange={(e)=>setName(e.target.value)} />
+          <TextField label="Email" fullWidth margin="normal" value={email} onChange={(e)=>setEmail(e.target.value)} />
+          <TextField label="Message" fullWidth margin="normal" value={message} multiline rows={4} onChange={(e)=>setMessage(e.target.value)} />
+          <Button variant="contained" color="primary" type="submit" fullWidth onClick={handleSubmit}>Submit</Button>
+
         </Box>
 
         <Box>
@@ -60,6 +93,7 @@ const Contact = () => {
           <Typography>Colombo, Sri Lanka</Typography> 
         </Box>
       </Box>
+        </form>
     </div>
   );
 };
