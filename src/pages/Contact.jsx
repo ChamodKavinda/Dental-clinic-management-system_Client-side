@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Navbar from '../global/Navbar';
 import emailjs from '@emailjs/browser';
 import React, { useRef } from 'react';
+import {toast, ToastContainer} from "react-toastify";
 
 const Contact = () => {
 
@@ -13,6 +14,8 @@ const Contact = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+
+    const handleSuccess = (msg) => toast.success(msg, { position: "top-right" });
 
     const handleOpenModal = () => {
       setModalOpen(true);
@@ -39,7 +42,7 @@ const Contact = () => {
 
         emailjs.send(serviceId,templateId,templateParams,publicKey)
             .then((response)=>{
-                console.log("email sent success ",response);
+                handleSuccess("Email Send Successfully!");
                 setName('');
                 setEmail('');
                 setMessage('');
@@ -93,7 +96,9 @@ const Contact = () => {
           <Typography>Colombo, Sri Lanka</Typography> 
         </Box>
       </Box>
+
         </form>
+        <ToastContainer />
     </div>
   );
 };
