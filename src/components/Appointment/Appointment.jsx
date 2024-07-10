@@ -3,6 +3,8 @@ import Sidebar from "../global/Sidebar";
 import {useEffect, useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import { Edit, Delete } from '@mui/icons-material';
+import Swal from 'sweetalert2';
+
 import {
     Container,
     Box,
@@ -19,7 +21,6 @@ import {
     IconButton, DialogTitle, DialogContent, DialogActions, Dialog
 } from '@mui/material';
 import axios from "axios";
-import {toast, ToastContainer} from "react-toastify";
 import UpdateAppointment from "../Appointment/updateAppointment";
 import {useCookies} from "react-cookie";
 
@@ -68,30 +69,37 @@ function Appointment() {
         })
     }
 
-    const handleSuccess = (msg) =>
-        toast.success(msg, {
-            position:'top-right'
+    const deleteAppointment = (userId) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch('http://localhost:3000/appointment/delete', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId: userId })
+                })
+                    .then(response => {
+                        getAppointment();
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success"
+                        });
+                    }).catch(error => {
+                    console.error('Axios error :', error);
+                });
+            }
         });
-
-    const deleteAppointment=(userId)=>{
-        const confirmed=confirm("Are you sure you want to delete this appointment?");
-        if (confirmed){
-            fetch('http://localhost:3000/appointment/delete',{
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ userId: userId })
-            })
-                .then(response=>{
-                    getAppointment()
-                    handleSuccess('Successfully Deleted');
-
-                }).catch(error=>{
-                console.error('Axios error :',error);
-            })
-        }
-    }
+    };
 
     const handleClickOpen = (appointment = null) => {
         setSelectedAppointment(appointment);
@@ -118,7 +126,6 @@ function Appointment() {
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                                 <Typography variant="h4">APPOINTMENT DETAILS</Typography>
                             </Box>
-                            <ToastContainer />
                             <Grid container spacing={2}>
                                 <Grid item xs={20}>
                                     <Box mt={-2}>
