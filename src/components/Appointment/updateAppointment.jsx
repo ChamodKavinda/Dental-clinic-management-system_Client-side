@@ -3,6 +3,7 @@ import React, {useEffect,useState} from "react";
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 
 import {
     Container,
@@ -16,7 +17,7 @@ import {
 } from '@mui/material';
 
 
-function UpdateAppointment({payload,onClose,getAppointment}) {
+function UpdateAppointment({payload,onClose}) {
 
     const [id,setId] = useState('');
     const [patientId,setPatientId] = useState('');
@@ -111,13 +112,19 @@ function UpdateAppointment({payload,onClose,getAppointment}) {
 
         axios.put('http://localhost:3000/appointment/update', payload)
             .then(response => {
-                console.log(response);
+                handleSuccess('Updated Successfully');
             }).catch(error => {
             console.error('Axios error :', error);
         });
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Your appointment has been updated",
+            showConfirmButton: false,
+            timer: 1500
+        });
         onClose();
-        handleSuccess('Updated Successfully');
-        getAppointment();
+
     };
 
     const handleBlur = (field) => {
