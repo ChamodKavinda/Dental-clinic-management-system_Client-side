@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 
 import {
     Container,
@@ -129,7 +130,14 @@ function AddAppointment() {
         });
         console.log(payload);
 
-        handleSuccess('Saved Successfully');
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Your appointment has been saved",
+            showConfirmButton: false,
+            timer: 1500
+        });
+
         handleReset();
     };
 
