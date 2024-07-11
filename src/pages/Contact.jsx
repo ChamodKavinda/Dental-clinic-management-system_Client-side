@@ -1,12 +1,13 @@
 
 import { AppBar, Toolbar, Typography, IconButton, TextField, Button, Box , Modal } from '@mui/material';
 import { CgMenuRightAlt } from "react-icons/cg";
-import logo from '../assets/teeth.png'; 
+import logo from '../assets/logoo.png';
 import { useState } from 'react';
 import Navbar from '../global/Navbar';
 import emailjs from '@emailjs/browser';
 import React, { useRef } from 'react';
 import {toast, ToastContainer} from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
 
@@ -16,6 +17,8 @@ const Contact = () => {
     const [message, setMessage] = useState('');
 
     const handleSuccess = (msg) => toast.success(msg, { position: "top-right" });
+
+    const navigate = useNavigate();
 
     const handleOpenModal = () => {
       setModalOpen(true);
@@ -56,8 +59,8 @@ const Contact = () => {
       <AppBar position="static" color="default" elevation={7} sx={{height:'80px'}}>
         <Toolbar>
           <Typography variant="h6" style={{ flexGrow: 1, display: 'flex', alignItems: 'center',fontWeight:900 }}>
-            <img src={logo} alt="logo" style={{ marginRight: 10, height: 40,backgroundColor:'black' }} />
-            DENTAL CARE PRO
+            <img src={logo} alt="logo" style={{ marginLeft: '50px', height: 40,cursor:"pointer"}} onClick={() => navigate('/Home')} />
+
           </Typography>
           <IconButton color="inherit" aria-label="menu" sx={{marginRight:'100px',marginTop:'10px'}} onClick={handleOpenModal}>
             <CgMenuRightAlt size={40} />
@@ -73,7 +76,7 @@ const Contact = () => {
 
 
         <form onSubmit={handleSubmit}>
-      <Box display="flex" justifyContent="center" alignItems="flex-start" padding={3}>
+      <Box display="flex" justifyContent="center"  alignItems="right" padding={5}>
         <Box component="form" sx={{ width: '40%', marginRight: 4,marginLeft:'-300px' }}>
           <Typography variant="h5" sx={{fontWeight:800}} gutterBottom>PROBLEMS?</Typography>
           <Typography variant="h5" sx={{fontWeight:800}} gutterBottom>WE'RE HERE TO HELP YOU.</Typography>
@@ -95,6 +98,8 @@ const Contact = () => {
            <Typography variant="h7" gutterBottom style={{ marginTop: 16 }} sx={{fontWeight:700}}>MAIN BRANCH</Typography>
           <Typography>Colombo, Sri Lanka</Typography> 
         </Box>
+
+
       </Box>
 
         </form>
