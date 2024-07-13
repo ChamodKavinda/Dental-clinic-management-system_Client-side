@@ -1,14 +1,10 @@
-
 import React, {useEffect,useState} from "react";
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
 import {
     Container,
     Box,
-    Paper,
-    Typography,
     Grid,
     TextField,
     MenuItem,
@@ -16,8 +12,7 @@ import {
 } from '@mui/material';
 
 
-function UpdatePatient({payload,onClose,getPatient}) {
-
+function UpdatePatient({payload,onClose}) {
     const [id,setId] = useState('');
     const [name,setName] = useState('');
     const [age,setAge] = useState('');
@@ -95,13 +90,11 @@ function UpdatePatient({payload,onClose,getPatient}) {
 
         axios.put('http://localhost:3000/patient/update', payload)
             .then(response => {
-                console.log(response);
+                handleSuccess('Updated Successfully');
             }).catch(error => {
             console.error('Axios error :', error);
         });
         onClose();
-        handleSuccess('Updated Successfully');
-        getPatient();
     };
 
     const handleBlur = (field) => {
@@ -117,7 +110,6 @@ function UpdatePatient({payload,onClose,getPatient}) {
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                             </Box>
                             <ToastContainer />
-                            <Paper sx={{ p: 0 }}>
                                 <form onSubmit={handleSubmit}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}>
@@ -204,7 +196,6 @@ function UpdatePatient({payload,onClose,getPatient}) {
                                                 value={description}
                                                 onChange={e =>{setDescription(e.target.value)}}
                                                 onBlur={() => handleBlur('description')}
-
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -220,7 +211,6 @@ function UpdatePatient({payload,onClose,getPatient}) {
                                         </Grid>
                                     </Grid>
                                 </form>
-                            </Paper>
                         </Container>
                     </Box>
                 </Box>
