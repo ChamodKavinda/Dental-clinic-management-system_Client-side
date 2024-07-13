@@ -1,24 +1,18 @@
-
 import React, {useEffect,useState} from "react";
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2';
-
 import {
     Container,
     Box,
-    Paper,
-    Typography,
     Grid,
     TextField,
     MenuItem,
     Button
 } from '@mui/material';
 
-
 function UpdateAppointment({payload,onClose}) {
-
     const [id,setId] = useState('');
     const [patientId,setPatientId] = useState('');
     const [dentistId,setDentistId] = useState('');
@@ -26,10 +20,9 @@ function UpdateAppointment({payload,onClose}) {
     const [time,setTime] = useState('');
     const [email,setEmail] = useState('');
     const [description,setDescription] = useState('');
+
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-
     const [dentist,setDentistData]=useState([]);
-
     const [touched, setTouched] = useState({
         id: false,
         patientId: false,
@@ -140,7 +133,6 @@ function UpdateAppointment({payload,onClose}) {
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                             </Box>
                             <ToastContainer />
-                            <Paper sx={{ p: 0 }}>
                                 <form onSubmit={handleSubmit}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}>
@@ -236,7 +228,6 @@ function UpdateAppointment({payload,onClose}) {
                                                 value={description}
                                                 onChange={e =>{setDescription(e.target.value)}}
                                                 onBlur={() => handleBlur('description')}
-
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -252,7 +243,6 @@ function UpdateAppointment({payload,onClose}) {
                                         </Grid>
                                     </Grid>
                                 </form>
-                            </Paper>
                         </Container>
                     </Box>
                 </Box>
