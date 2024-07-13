@@ -1,8 +1,8 @@
 import React, {useEffect,useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 import {
     Container,
     Box,
@@ -50,10 +50,6 @@ function UpdateStaff({payload,onClose}) {
         });
     };
 
-    const handleSuccess = (msg) =>
-        toast.success(msg, {
-            position:'top-right'
-        });
 
     useEffect(() => {
         if (payload) {
@@ -92,7 +88,13 @@ function UpdateStaff({payload,onClose}) {
 
         axios.put('http://localhost:3000/employee/update', payload)
             .then(response => {
-                handleSuccess('Updated Successfully');
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Your employee has been updated",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }).catch(error => {
             console.error('Axios error :', error);
         });
@@ -110,7 +112,6 @@ function UpdateStaff({payload,onClose}) {
                 <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 0}}>
                         <Container maxWidth="lg">
-                            <ToastContainer />
                                 <form onSubmit={handleSubmit}>
                                     <Grid container spacing={2} sx={{marginTop:'5px'}}>
                                         <Grid item xs={6}>
