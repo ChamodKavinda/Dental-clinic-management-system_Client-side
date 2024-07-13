@@ -1,7 +1,7 @@
 import React, {useEffect,useState} from "react";
 import axios from 'axios';
-import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 import {
     Container,
     Box,
@@ -48,10 +48,6 @@ function UpdatePatient({payload,onClose}) {
         });
     };
 
-    const handleSuccess = (msg) =>
-        toast.success(msg, {
-            position:'top-right'
-        });
 
     useEffect(() => {
         if (payload) {
@@ -90,10 +86,17 @@ function UpdatePatient({payload,onClose}) {
 
         axios.put('http://localhost:3000/patient/update', payload)
             .then(response => {
-                handleSuccess('Updated Successfully');
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Your patient has been updated",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }).catch(error => {
             console.error('Axios error :', error);
         });
+
         onClose();
     };
 
@@ -107,11 +110,8 @@ function UpdatePatient({payload,onClose}) {
                 <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 0}}>
                         <Container maxWidth="lg">
-                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                            </Box>
-                            <ToastContainer />
                                 <form onSubmit={handleSubmit}>
-                                    <Grid container spacing={2}>
+                                    <Grid container spacing={2} sx={{marginTop:'5px'}}>
                                         <Grid item xs={6}>
                                             <TextField
                                                 fullWidth
