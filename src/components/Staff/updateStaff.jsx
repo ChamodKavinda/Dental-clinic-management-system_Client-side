@@ -1,26 +1,18 @@
-
 import React, {useEffect,useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
 import {
     Container,
     Box,
-    Paper,
-    Typography,
     Grid,
     TextField,
     MenuItem,
     Button
 } from '@mui/material';
 
-
-
 function UpdateStaff({payload,onClose}) {
-
-
     const [id,setId] = useState('');
     const [name,setName] = useState('');
     const [age,setAge] = useState('');
@@ -28,7 +20,6 @@ function UpdateStaff({payload,onClose}) {
     const [sex,setSex] = useState('');
     const [address,setAddress] = useState('');
     const [description,setDescription] = useState('');
-
 
     const navigate = useNavigate();
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
@@ -43,7 +34,6 @@ function UpdateStaff({payload,onClose}) {
     });
 
     const handleReset = () => {
-        setId('');
         setName('');
         setAge('');
         setNumber('');
@@ -51,7 +41,6 @@ function UpdateStaff({payload,onClose}) {
         setAddress('');
         setDescription('');
         setTouched({
-            id: false,
             name: false,
             age: false,
             number: false,
@@ -88,18 +77,6 @@ function UpdateStaff({payload,onClose}) {
 
     }, [id, name, age, number, sex, address]);
 
-
-    const [employee, setEmployee] = useState({
-        id: '',
-        name: '',
-        age: '',
-        phone: '',
-        sex: '',
-        address: '',
-        description: ''
-    });
-
-
     const handleSubmit = (e) => {
         handleReset();
         e.preventDefault();
@@ -115,12 +92,12 @@ function UpdateStaff({payload,onClose}) {
 
         axios.put('http://localhost:3000/employee/update', payload)
             .then(response => {
-                console.log(response);
+                handleSuccess('Updated Successfully');
             }).catch(error => {
             console.error('Axios error :', error);
         });
         onClose();
-        handleSuccess('Updated Successfully');
+
     };
 
     const handleBlur = (field) => {
@@ -130,17 +107,12 @@ function UpdateStaff({payload,onClose}) {
     return (
         <>
             <div className="main d-flex">
-
                 <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 0}}>
                         <Container maxWidth="lg">
-                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                                {/*<Typography variant="h4">ADD EMPLOYEE</Typography>*/}
-                            </Box>
                             <ToastContainer />
-                            <Paper sx={{ p: 0 }}>
                                 <form onSubmit={handleSubmit}>
-                                    <Grid container spacing={2}>
+                                    <Grid container spacing={2} sx={{marginTop:'5px'}}>
                                         <Grid item xs={6}>
                                             <TextField
                                                 fullWidth
@@ -231,14 +203,10 @@ function UpdateStaff({payload,onClose}) {
                                         <Grid item xs={12}>
                                             <Box display="flex" justifyContent="flex-end">
 
-                                                {/*<Button type="back" variant="contained" color="secondary" sx={{marginRight:'920px'}} onClick={()=>navigate('/staff')}>
-                                                    Back
-                                                </Button>*/}
-
-                                                {/*<Button type="reset" variant="contained" color="error" sx={{marginRight:'10px'}}
+                                                <Button type="reset" variant="contained" color="error" sx={{marginRight:'10px'}}
                                                         onClick={handleReset}>
                                                     Reset
-                                                </Button>*/}
+                                                </Button>
                                                 <Button type="submit" variant="contained" color="primary"  disabled={isSubmitDisabled}>
                                                     Update
                                                 </Button>
@@ -246,7 +214,6 @@ function UpdateStaff({payload,onClose}) {
                                         </Grid>
                                     </Grid>
                                 </form>
-                            </Paper>
                         </Container>
                     </Box>
                 </Box>
