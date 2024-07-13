@@ -1,22 +1,17 @@
-
 import React, {useEffect,useState} from "react";
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
 import {
     Container,
     Box,
-    Paper,
-    Typography,
     Grid,
     TextField,
     MenuItem,
     Button
 } from '@mui/material';
 
-
-function UpdateDentist({payload,onClose,getDentist}) {
+function UpdateDentist({payload,onClose}) {
 
     const [id,setId] = useState('');
     const [name,setName] = useState('');
@@ -95,13 +90,17 @@ function UpdateDentist({payload,onClose,getDentist}) {
 
         axios.put('http://localhost:3000/dentist/update', payload)
             .then(response => {
-                console.log(response);
+                handleSuccess('Updated Successfully');
             }).catch(error => {
             console.error('Axios error :', error);
         });
         onClose();
         handleSuccess('Updated Successfully');
-        getDentist();
+        axios.get('http://localhost:3000/dentist/get')
+            .then(response=>{
+            }).catch(error=>{
+            console.error('Axios error',error);
+        })
     };
 
     const handleBlur = (field) => {
@@ -117,7 +116,6 @@ function UpdateDentist({payload,onClose,getDentist}) {
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                             </Box>
                             <ToastContainer />
-                            <Paper sx={{ p: 0 }}>
                                 <form onSubmit={handleSubmit}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}>
@@ -204,7 +202,6 @@ function UpdateDentist({payload,onClose,getDentist}) {
                                                 value={description}
                                                 onChange={e =>{setDescription(e.target.value)}}
                                                 onBlur={() => handleBlur('description')}
-
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -220,7 +217,6 @@ function UpdateDentist({payload,onClose,getDentist}) {
                                         </Grid>
                                     </Grid>
                                 </form>
-                            </Paper>
                         </Container>
                     </Box>
                 </Box>
