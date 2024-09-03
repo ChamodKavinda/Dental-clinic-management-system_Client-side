@@ -24,6 +24,7 @@ import {
 import axios from "axios";
 import { useEffect } from "react";
 import {useCookies} from "react-cookie";
+import Swal from "sweetalert2";
 
 
 function Staff() {
@@ -79,23 +80,35 @@ function Staff() {
 
     const deleteEmployee=(userId)=>{
 
-        const confirmed=confirm("Are you sure you want to delete this user?");
-        if (confirmed){
-            fetch('http://localhost:3000/employee/delete',{
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ userId: userId })
-            })
-                .then(response=>{
-                    getAllEmployee()
-                    handleSuccess('Successfully Deleted');
-
-                }).catch(error=>{
-                    console.error('Axios error :',error);
-            })
-        }
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed){
+                fetch('http://localhost:3000/employee/delete',{
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId: userId })
+                })
+                    .then(response => {
+                        getAllEmployee();
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success"
+                        });
+                    }).catch(error => {
+                    console.error('Axios error :', error);
+                });
+            }
+        });
     }
 
 
