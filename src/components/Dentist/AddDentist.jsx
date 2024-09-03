@@ -31,6 +31,17 @@ function AddDentist() {
     const [description, setDescription] = useState('');
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
+    const [touched, setTouched] = useState({
+        id: false,
+        name: false,
+        age: false,
+        number: false,
+        sex: false,
+        address: false,
+        description: false
+    });
+
+
     useEffect(() => {
         if (id && name && age && number && sex && address) {
             setIsSubmitDisabled(false);
@@ -40,14 +51,21 @@ function AddDentist() {
     }, [id, name, age, number, sex, address]);
 
     const handleReset = () => {
-        setDentist({
-            id: '',
-            name: '',
-            age: '',
-            phone: '',
-            sex: '',
-            address: '',
-            description: ''
+        setId('');
+        setName('');
+        setAge('');
+        setNumber('');
+        setSex('');
+        setAddress('');
+        setDescription('');
+        setTouched({
+            id: false,
+            name: false,
+            age: false,
+            number: false,
+            sex: false,
+            address: false,
+            description: false
         });
     };
 
@@ -82,6 +100,7 @@ function AddDentist() {
 
     const handleSubmit = (e) => {
         handleSuccess('Saved Successfully');
+        handleReset();
         e.preventDefault();
 
         const payload={
@@ -102,6 +121,10 @@ function AddDentist() {
         })
 
         console.log(dentist);
+    };
+
+    const handleBlur = (field) => {
+        setTouched({ ...touched, [field]: true });
     };
 
     const handleSuccess = (msg) =>
@@ -137,6 +160,10 @@ function AddDentist() {
                                                 variant="outlined"
                                                 value={id}
                                                 onChange={e =>setId(e.target.value)}
+                                                onBlur={() => handleBlur('id')}
+                                                error={touched.id && !id}
+                                                helperText={touched.id && !id ? "This field is required" : ""}
+                                                required
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -147,6 +174,10 @@ function AddDentist() {
                                                 variant="outlined"
                                                 value={name}
                                                 onChange={e =>setName(e.target.value)}
+                                                onBlur={() => handleBlur('name')}
+                                                error={touched.name && !name}
+                                                helperText={touched.name && !name ? "This field is required" : ""}
+                                                required
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -158,6 +189,10 @@ function AddDentist() {
                                                 type="number"
                                                 value={age}
                                                 onChange={e =>setAge(e.target.value)}
+                                                onBlur={() => handleBlur('age')}
+                                                error={touched.age && !age}
+                                                helperText={touched.age && !age ? "This field is required" : ""}
+                                                required
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -169,6 +204,10 @@ function AddDentist() {
                                                 type="number"
                                                 value={number}
                                                 onChange={e =>setNumber(e.target.value)}
+                                                onBlur={() => handleBlur('number')}
+                                                error={touched.number && !id}
+                                                helperText={touched.number && !number ? "This field is required" : ""}
+                                                required
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -180,6 +219,10 @@ function AddDentist() {
                                                 variant="outlined"
                                                 value={sex}
                                                 onChange={e =>setSex(e.target.value)}
+                                                onBlur={() => handleBlur('sex')}
+                                                error={touched.sex && !sex}
+                                                helperText={touched.sex && !sex ? "This field is required" : ""}
+                                                required
                                             >
                                                 <MenuItem value="Male">Male</MenuItem>
                                                 <MenuItem value="Female">Female</MenuItem>
@@ -193,6 +236,10 @@ function AddDentist() {
                                                 variant="outlined"
                                                 value={address}
                                                 onChange={e =>setAddress(e.target.value)}
+                                                onBlur={() => handleBlur('address')}
+                                                error={touched.address && !address}
+                                                helperText={touched.address && !address ? "This field is required" : ""}
+                                                required
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
