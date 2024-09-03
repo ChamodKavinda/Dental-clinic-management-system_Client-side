@@ -6,7 +6,7 @@ import cover from '../assets/background.gif';
 import { CgMenuRightAlt } from "react-icons/cg";
 import Navbar from '../global/Navbar';
 import { FaArrowDown } from "react-icons/fa6";
-import backgroundGif from '../assets/dentalcare.jpg';
+import backgroundGif from '../assets/background.jpg';
 import cleaning from '../assets/cleaning.jpg';
 import fissure from '../assets/fissure.jpeg';
 import filling from '../assets/fillings.jpg';
@@ -33,7 +33,7 @@ const Logo = styled('img')({
 
 const Header = styled(Typography)(({ theme }) => ({
   fontWeight: 900,
-  color: '#000',
+  color: '#1E201E',
   fontSize: '65px',
   marginBottom: theme.spacing(2),
 }));
@@ -49,7 +49,7 @@ const BackgroundVideo = styled('video')({
 });
 
 const SubHeader = styled(Typography)(({ theme }) => ({
-  color: 'black',
+  color: '#16423C',
   marginBottom: theme.spacing(4),
   fontWeight: 700,
   marginTop:'30px'
@@ -119,14 +119,15 @@ function Home() {
 
   const image = {
     background: `url(${backgroundGif})`,
-    height: "600px",
+    height: "610px",
     width:"100%",
     marginTop: "0px",
     fontSize: "50px",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
 
-};
+  };
+
 
   const Footer = styled('footer')(({ theme }) => ({
     backgroundColor: 'black',
@@ -146,7 +147,7 @@ function Home() {
         </BackgroundVideo>*/}
         <AppBar position="fixed" color="transparent" elevation={0} sx={{ top: '100px' }}>
           <Toolbar >
-            <Logo src={logo} alt="Dental Care Pro" />
+            <Logo src={logo} alt="Dental Care Pro"  />
             <Typography variant="h5" component="div" sx={{ flexGrow: 1, marginTop: '-150px', marginRight: '700px', fontWeight: 800 }}>
             </Typography>
             <IconButton color="inherit" sx={{ marginTop: '-150px', marginRight: '150px' }} onClick={handleOpenModal}>
@@ -214,7 +215,7 @@ function Home() {
           </Grid>
         </PhotosSection>
       </Root>
-  <Footer>
+  <Footer sx={{backgroundColor:'#1d1d1d'}}>
     <Typography sx={{marginRight:'1000px',marginTop:'20px',fontSize:'40px',fontWeight:900}}>
       Dental Care Pro
     </Typography>
