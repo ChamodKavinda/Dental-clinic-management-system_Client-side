@@ -1,6 +1,5 @@
 import React, {useEffect,useState} from "react";
 import axios from 'axios';
-import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2';
 import {
@@ -50,10 +49,6 @@ function UpdateAppointment({payload,onClose}) {
         });
     };
 
-    const handleSuccess = (msg) =>
-        toast.success(msg, {
-            position:'top-right'
-        });
 
     useEffect(() => {
         fetchAllData();
@@ -105,17 +100,17 @@ function UpdateAppointment({payload,onClose}) {
 
         axios.put('http://localhost:3000/appointment/update', payload)
             .then(response => {
-                handleSuccess('Updated Successfully');
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Your appointment has been updated",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }).catch(error => {
             console.error('Axios error :', error);
         });
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Your appointment has been updated",
-            showConfirmButton: false,
-            timer: 1500
-        });
+
         onClose();
 
     };
@@ -130,11 +125,8 @@ function UpdateAppointment({payload,onClose}) {
                 <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 0}}>
                         <Container maxWidth="lg">
-                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                            </Box>
-                            <ToastContainer />
-                                <form onSubmit={handleSubmit}>
-                                    <Grid container spacing={2}>
+                                <form onSubmit={handleSubmit} >
+                                    <Grid container spacing={2} sx={{marginTop:'5px'}}>
                                         <Grid item xs={6}>
                                             <TextField
                                                 fullWidth
