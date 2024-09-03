@@ -3,7 +3,7 @@ import Sidebar from "../global/Sidebar";
 import {useEffect, useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import { Edit, Delete } from '@mui/icons-material';
-
+import Swal from 'sweetalert2';
 
 import {
     Container,
@@ -79,8 +79,16 @@ function Patient() {
 
     const deletePatient=(userId)=>{
 
-        const confirmed=confirm("Are you sure you want to delete this user?");
-        if (confirmed){
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+        if (result.isConfirmed){
             fetch('http://localhost:3000/patient/delete',{
                 method: 'DELETE',
                 headers: {
@@ -88,15 +96,19 @@ function Patient() {
                 },
                 body: JSON.stringify({ userId: userId })
             })
-                .then(response=>{
-                    getPatient()
-                    handleSuccess('Successfully Deleted');
-
-                }).catch(error=>{
-                    console.error('Axios error :',error);
-            })
+                .then(response => {
+                    getPatient();
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                }).catch(error => {
+                console.error('Axios error :', error);
+            });
         }
-    }
+        });
+    };
 
     const handleClickOpen = (patient = null) => {
         setSelectedPatient(patient);
