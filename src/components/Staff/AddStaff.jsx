@@ -1,7 +1,7 @@
 import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
 import React, {useEffect,useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,10 +16,11 @@ import {
     MenuItem,
     Button
 } from '@mui/material';
+import Swal from "sweetalert2";
 
 
 
-function AddStaff({closeModal}) {
+function AddStaff({payload}) {
 
 
     const [id,setId] = useState('');
@@ -31,6 +32,7 @@ function AddStaff({closeModal}) {
     const [description,setDescription] = useState('');
 
 
+    const navigate = useNavigate();
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const [touched, setTouched] = useState({
         id: false,
@@ -72,9 +74,9 @@ function AddStaff({closeModal}) {
         } else {
             setIsSubmitDisabled(true);
         }
+
     }, [id, name, age, number, sex, address]);
 
-    const navigate=useNavigate();
 
     const [employee, setEmployee] = useState({
         id: '',
@@ -88,9 +90,6 @@ function AddStaff({closeModal}) {
 
 
     const handleSubmit = (e) => {
-        handleSuccess('Saved Successfully');
-
-        handleReset();
         e.preventDefault();
         const payload = {
             id: id,
@@ -104,11 +103,17 @@ function AddStaff({closeModal}) {
 
         axios.post('http://localhost:3000/employee/save', payload)
             .then(response => {
-                console.log(response);
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Employee has been saved",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                handleReset();
             }).catch(error => {
             console.error('Axios error :', error);
         });
-        console.log(payload);
     };
 
     const handleBlur = (field) => {
@@ -117,12 +122,12 @@ function AddStaff({closeModal}) {
 
     return (
         <>
-            {/*<Header />*/}
+            <Header />
 
             <div className="main d-flex">
-                {/*<div className="sidebarWrapper">
+                <div className="sidebarWrapper">
                     <Sidebar />
-                </div>*/}
+                </div>
 
 
                 <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
@@ -240,8 +245,7 @@ function AddStaff({closeModal}) {
                                         <Grid item xs={12}>
                                             <Box display="flex" justifyContent="flex-end">
 
-                                                <Button type="submit" variant="contained" color="secondary" sx={{marginRight:'720px'}}
-                                                        onClick={closeModal}>
+                                                <Button type="submit" variant="contained" color="secondary" sx={{marginRight:'720px'}} onClick={()=>navigate('/staff')}>
                                                     Back
                                                 </Button>
 
