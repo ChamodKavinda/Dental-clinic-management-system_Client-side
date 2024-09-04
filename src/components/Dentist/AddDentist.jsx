@@ -15,6 +15,7 @@ import {
     Button
 } from '@mui/material';
 import {toast, ToastContainer} from "react-toastify";
+import Swal from "sweetalert2";
 
 
 
@@ -99,8 +100,7 @@ function AddDentist() {
 
 
     const handleSubmit = (e) => {
-        handleSuccess('Saved Successfully');
-        handleReset();
+
         e.preventDefault();
 
         const payload={
@@ -115,7 +115,14 @@ function AddDentist() {
 
         axios.post('http://localhost:3000/dentist/save',payload)
             .then(response=>{
-                console.log(response);
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Patient has been saved",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                handleReset();
             }).catch(error=>{
                 console.error('Axios error :',error)
         })
@@ -127,10 +134,6 @@ function AddDentist() {
         setTouched({ ...touched, [field]: true });
     };
 
-    const handleSuccess = (msg) =>
-        toast.success(msg, {
-            position:'top-right'
-        });
 
     return (
         <>
