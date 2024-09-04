@@ -16,6 +16,7 @@ import {
     MenuItem,
     Button
 } from '@mui/material';
+import Swal from "sweetalert2";
 
 function AddPatient() {
     const [id, setId] = useState('');
@@ -72,7 +73,6 @@ function AddPatient() {
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
-        handleSuccess('Saved Successfully');
 
         handleReset();
         e.preventDefault();
@@ -88,11 +88,17 @@ function AddPatient() {
 
         Axios.post('http://localhost:3000/patient/save', payload)
             .then(response => {
-                console.log(response);
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Patient has been saved",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }).catch(error => {
             console.error('Axios error :', error);
         });
-        console.log(payload);
+
     };
 
     const handleBlur = (field) => {
