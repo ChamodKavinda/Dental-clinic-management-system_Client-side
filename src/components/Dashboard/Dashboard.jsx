@@ -1,23 +1,16 @@
 import React from 'react';
 import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
-import './dashboard.css';
 import {useNavigate} from "react-router-dom";
-
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import {
-    Avatar,
     Box,
-    Button,
     Container,
     Divider,
     Grid,
-    List,
-    ListItem,
-    ListItemText,
     Paper,
     Typography
 } from "@mui/material";
@@ -98,22 +91,27 @@ function Dashboard() {
                 { withCredentials: true }
             );
             const { status, user } = data;
-            console.log(data)
             setUsername(user);
-            if (status){
-                toast(`Hello ${user}`, {
+
+            if (status && !localStorage.getItem("welcomeMessageShown")) {
+                toast(`Welcome to ${user}`, {
                     position: "top-right",
-                })
-            }else
-                (removeCookie("token"), navigate("/login"));
+                });
+                localStorage.setItem("welcomeMessageShown", "true");
+            } else if (!status) {
+                removeCookie("token");
+                navigate("/login");
+            }
         };
+
         verifyCookie();
     }, [cookies, navigate, removeCookie]);
-    const Logout = () => {
-        removeCookie("token");
-        navigate("/login");
-    };
 
+    const Logout = () => {
+        localStorage.removeItem("welcomeMessageShown");
+        removeCookie("token");
+        navigate("/home");
+    };
 
 
     return (
@@ -171,7 +169,6 @@ function Dashboard() {
                                             </Box>
                                         </Paper>
                                     </Grid>
-
                                 </Grid>
 
 
@@ -225,15 +222,11 @@ function Dashboard() {
                                         </Grid>
                                     </Paper>
                                 </Box>
-
                             </Container>
                         </Box>
                     </Box>
-
-
                 </div>
             </div>
-
         </>
     );
 }
