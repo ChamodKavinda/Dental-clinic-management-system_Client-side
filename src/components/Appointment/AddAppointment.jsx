@@ -3,16 +3,15 @@ import Sidebar from "../global/Sidebar";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2';
 
 import {
     Container,
     Box,
-    Paper,
     Typography,
     Grid,
+    Paper,
     TextField,
     MenuItem,
     Button
@@ -42,12 +41,6 @@ function AddAppointment() {
         description: false
     });
 
-    const handleSuccess = (msg) =>
-        toast.success(msg, {
-            position:'top-right'
-        });
-
-
     const fetchAllData = async () => {
         try {
             const [patientsRes, dentistsRes] = await Promise.all([
@@ -63,7 +56,35 @@ function AddAppointment() {
         }
     };
 
+    const fetchLastAppointmentId = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/appointment/last');
+
+            if (Array.isArray(response.data) && response.data.length > 0) {
+                const lastAppointment = response.data[response.data.length - 1];
+                const lastId = lastAppointment?.id || "A000";
+                const newIdNumber = parseInt(lastId.slice(1)) + 1;
+                const newId = `A${String(newIdNumber).padStart(3, '0')}`;
+                setId(newId);
+
+            } else if (response.data?.id) {
+                const lastId = response.data.id || "A000";
+                const newIdNumber = parseInt(lastId.slice(1)) + 1;
+                const newId = `A${String(newIdNumber).padStart(3, '0')}`;
+                setId(newId);
+
+            } else {
+                const lastId = "A001";
+                setId(lastId);
+            }
+        } catch (error) {
+            console.error('Error fetching last appointment ID:', error);
+        }
+    };
+
+
     useEffect(() => {
+        fetchLastAppointmentId();
         fetchAllData();
         if (id && time && patientId && dentistId && email && date) {
             setIsSubmitDisabled(false);
@@ -93,11 +114,8 @@ function AddAppointment() {
 
     const navigate = useNavigate();
 
-
     const handleSubmit = (e) => {
-
         e.preventDefault();
-
         const payload = {
             id: id,
             time: time,
@@ -137,7 +155,6 @@ function AddAppointment() {
             showConfirmButton: false,
             timer: 1500
         });
-
         handleReset();
     };
 
@@ -152,14 +169,13 @@ function AddAppointment() {
                 <div className="sidebarWrapper">
                     <Sidebar />
                 </div>
-                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
+                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: 'white' ,marginLeft: 30,marginTop: 10}}>
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                         <Container maxWidth="lg">
-                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+                            <Box display="block" justifyContent="space-between" alignItems="center" mb={3} >
                                 <Typography variant="h4">ADD APPOINTMENT</Typography>
                             </Box>
-                            <ToastContainer />
-                            <Paper sx={{ p: 3 }}>
+                            <Paper sx={{ p: 2 }}>
                                 <form onSubmit={handleSubmit}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}>
@@ -175,6 +191,7 @@ function AddAppointment() {
                                                 error={touched.id && !id}
                                                 helperText={touched.id && !id ? "This field is required" : ""}
                                                 required
+                                                disabled
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -287,7 +304,7 @@ function AddAppointment() {
                                                     type="button"
                                                     variant="contained"
                                                     color="secondary"
-                                                    sx={{ marginRight: '720px' }}
+                                                    sx={{ marginRight: '770px' }}
                                                     onClick={() => navigate('/appointment')}
                                                 >
                                                     Back
