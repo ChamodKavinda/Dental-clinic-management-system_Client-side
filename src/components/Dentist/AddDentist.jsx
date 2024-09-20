@@ -72,6 +72,7 @@ function AddDentist() {
 
 
     useEffect(() => {
+        fetchLastDentistId();
         if (submitted) {
             setDentist({
                 id: '',
@@ -118,7 +119,7 @@ function AddDentist() {
                 Swal.fire({
                     position: "center",
                     icon: "success",
-                    title: "Patient has been saved",
+                    title: "Dentist has been saved",
                     showConfirmButton: false,
                     timer: 1500
                 });
@@ -126,14 +127,38 @@ function AddDentist() {
             }).catch(error=>{
                 console.error('Axios error :',error)
         })
-
-        console.log(dentist);
     };
 
     const handleBlur = (field) => {
         setTouched({ ...touched, [field]: true });
     };
 
+
+    const fetchLastDentistId = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/dentist/last');
+
+            if (Array.isArray(response.data) && response.data.length > 0) {
+                const lastDentist = response.data[response.data.length - 1];
+                const lastId = lastDentist?.id || "D000";
+                const newIdNumber = parseInt(lastId.slice(1)) + 1;
+                const newId = `D${String(newIdNumber).padStart(3, '0')}`;
+                setId(newId);
+
+            } else if (response.data?.id) {
+                const lastId = response.data.id || "D000";
+                const newIdNumber = parseInt(lastId.slice(1)) + 1;
+                const newId = `D${String(newIdNumber).padStart(3, '0')}`;
+                setId(newId);
+
+            } else {
+                const lastId = "D001";
+                setId(lastId);
+            }
+        } catch (error) {
+            console.error('Error fetching last dentist ID:', error);
+        }
+    };
 
     return (
         <>
@@ -145,14 +170,14 @@ function AddDentist() {
                 </div>
 
 
-                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
+                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7',marginLeft: 30,marginTop: 8 }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                         <Container maxWidth="lg">
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                                 <Typography variant="h4">ADD DENTIST</Typography>
                             </Box>
                             <ToastContainer />
-                            <Paper sx={{ p: 3 }}>
+                            <Paper sx={{ p: 2 }}>
                                 <form onSubmit={handleSubmit}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}>
@@ -167,6 +192,7 @@ function AddDentist() {
                                                 error={touched.id && !id}
                                                 helperText={touched.id && !id ? "This field is required" : ""}
                                                 required
+                                                disabled
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -260,7 +286,7 @@ function AddDentist() {
                                         <Grid item xs={12}>
                                             <Box display="flex" justifyContent="flex-end">
 
-                                                <Button type="submit" variant="contained" color="secondary" sx={{marginRight:'720px'}}
+                                                <Button type="submit" variant="contained" color="secondary" sx={{marginRight:'770px'}}
                                                         onClick={()=>navigate('/dentist')}>
                                                     Back
                                                 </Button>
