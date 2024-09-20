@@ -17,6 +17,7 @@ import {
     Button
 } from '@mui/material';
 import Swal from "sweetalert2";
+import axios from "axios";
 
 function AddPatient() {
     const [id, setId] = useState('');
@@ -26,7 +27,7 @@ function AddPatient() {
     const [sex, setSex] = useState('');
     const [address, setAddress] = useState('');
     const [description, setDescription] = useState('');
-
+    const [patient,setPatient]=useState([]);
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const [touched, setTouched] = useState({
         id: false,
@@ -44,6 +45,7 @@ function AddPatient() {
         });
 
     useEffect(() => {
+        fetchLastPatientId();
         if (id && name && age && number && sex && address) {
             setIsSubmitDisabled(false);
         } else {
@@ -72,9 +74,16 @@ function AddPatient() {
 
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const getPatient=()=>{
+        Axios.get('http://localhost:3000/patient/get')
+            .then(response=>{
+                setPatient(response.data || [])
+            }).catch(error=>{
+            console.error("Axios error :",error)
+        })
+    }
 
-        handleReset();
+    const handleSubmit = (e) => {
         e.preventDefault();
         const payload = {
             id: id,
@@ -88,6 +97,7 @@ function AddPatient() {
 
         Axios.post('http://localhost:3000/patient/save', payload)
             .then(response => {
+                getPatient();
                 Swal.fire({
                     position: "center",
                     icon: "success",
@@ -95,6 +105,7 @@ function AddPatient() {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                handleReset();
             }).catch(error => {
             console.error('Axios error :', error);
         });
@@ -105,6 +116,33 @@ function AddPatient() {
         setTouched({ ...touched, [field]: true });
     };
 
+    const fetchLastPatientId = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/patient/last');
+
+            if (Array.isArray(response.data) && response.data.length > 0) {
+                const lastPatient = response.data[response.data.length - 1];
+                const lastId = lastPatient?.id || "P000";
+                const newIdNumber = parseInt(lastId.slice(1)) + 1;
+                const newId = `P${String(newIdNumber).padStart(3, '0')}`;
+                setId(newId);
+
+            } else if (response.data?.id) {
+                const lastId = response.data.id || "P000";
+                const newIdNumber = parseInt(lastId.slice(1)) + 1;
+                const newId = `P${String(newIdNumber).padStart(3, '0')}`;
+                setId(newId);
+
+            } else {
+                const lastId = "P001";
+                setId(lastId);
+            }
+        } catch (error) {
+            console.error('Error fetching last patient ID:', error);
+        }
+    };
+
+
     return (
         <>
             <Header />
@@ -112,14 +150,14 @@ function AddPatient() {
                 <div className="sidebarWrapper">
                     <Sidebar />
                 </div>
-                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
+                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7',marginLeft: 30,marginTop: 8 }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                         <Container maxWidth="lg">
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                                 <Typography variant="h4">ADD PATIENT</Typography>
                             </Box>
                             <ToastContainer />
-                            <Paper sx={{ p: 3 }}>
+                            <Paper sx={{ p: 2 }}>
                                 <form onSubmit={handleSubmit}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}>
@@ -135,6 +173,7 @@ function AddPatient() {
                                                 error={touched.id && !id}
                                                 helperText={touched.id && !id ? "This field is required" : ""}
                                                 required
+                                                disabled
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -231,7 +270,7 @@ function AddPatient() {
                                                     type="button"
                                                     variant="contained"
                                                     color="secondary"
-                                                    sx={{ marginRight: '720px' }}
+                                                    sx={{ marginRight: '770px' }}
                                                     onClick={() => navigate('/patient')}
                                                 >
                                                     Back
