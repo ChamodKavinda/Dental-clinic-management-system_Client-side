@@ -20,7 +20,7 @@ import Swal from "sweetalert2";
 
 
 
-function AddStaff({payload}) {
+function AddStaff() {
 
 
     const [id,setId] = useState('');
@@ -63,12 +63,8 @@ function AddStaff({payload}) {
         });
     };
 
-    const handleSuccess = (msg) =>
-        toast.success(msg, {
-            position:'top-right'
-        });
-
     useEffect(() => {
+        fetchLastEmployeeId();
         if (id && name && age && number && sex && address) {
             setIsSubmitDisabled(false);
         } else {
@@ -77,16 +73,6 @@ function AddStaff({payload}) {
 
     }, [id, name, age, number, sex, address]);
 
-
-    const [employee, setEmployee] = useState({
-        id: '',
-        name: '',
-        age: '',
-        phone: '',
-        sex: '',
-        address: '',
-        description: ''
-    });
 
 
     const handleSubmit = (e) => {
@@ -120,6 +106,32 @@ function AddStaff({payload}) {
         setTouched({ ...touched, [field]: true });
     };
 
+    const fetchLastEmployeeId = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/employee/last');
+
+            if (Array.isArray(response.data) && response.data.length > 0) {
+                const lastEmployee = response.data[response.data.length - 1];
+                const lastId = lastEmployee?.id || "E000";
+                const newIdNumber = parseInt(lastId.slice(1)) + 1;
+                const newId = `E${String(newIdNumber).padStart(3, '0')}`;
+                setId(newId);
+
+            } else if (response.data?.id) {
+                const lastId = response.data.id || "E000";
+                const newIdNumber = parseInt(lastId.slice(1)) + 1;
+                const newId = `E${String(newIdNumber).padStart(3, '0')}`;
+                setId(newId);
+
+            } else {
+                const lastId = "E001";
+                setId(lastId);
+            }
+        } catch (error) {
+            console.error('Error fetching last employee ID:', error);
+        }
+    };
+
     return (
         <>
             <Header />
@@ -130,14 +142,14 @@ function AddStaff({payload}) {
                 </div>
 
 
-                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
+                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7',marginLeft: 30,marginTop: 8 }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                         <Container maxWidth="lg">
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                                 <Typography variant="h4">ADD EMPLOYEE</Typography>
                             </Box>
                             <ToastContainer />
-                            <Paper sx={{ p: 3 }}>
+                            <Paper sx={{ p: 2 }}>
                                 <form onSubmit={handleSubmit}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}>
@@ -152,6 +164,7 @@ function AddStaff({payload}) {
                                                 error={touched.id && !id}
                                                 helperText={touched.id && !id ? "This field is required" : ""}
                                                 required
+                                                disabled
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -245,7 +258,7 @@ function AddStaff({payload}) {
                                         <Grid item xs={12}>
                                             <Box display="flex" justifyContent="flex-end">
 
-                                                <Button type="submit" variant="contained" color="secondary" sx={{marginRight:'720px'}} onClick={()=>navigate('/staff')}>
+                                                <Button type="submit" variant="contained" color="secondary" sx={{marginRight:'770px'}} onClick={()=>navigate('/staff')}>
                                                     Back
                                                 </Button>
 
@@ -264,8 +277,6 @@ function AddStaff({payload}) {
                         </Container>
                     </Box>
                 </Box>
-
-
             </div>
         </>
     );
