@@ -120,7 +120,7 @@ function Appointment() {
                     <Sidebar />
                 </div>
 
-                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7' }}>
+                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: 'white',marginLeft: 30 }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                         <Container maxWidth="lg">
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -129,11 +129,27 @@ function Appointment() {
                             <Grid container spacing={2}>
                                 <Grid item xs={20}>
                                     <Box mt={-2}>
-                                        <Paper sx={{ p: 2 }}>
-                                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                                                <Typography variant="h6"></Typography>
-                                                <Button variant="contained" color="primary" onClick={()=>navigate('/addAppointment') }>Add Appointment</Button>
-                                            </Box>
+                                        <Box
+                                            display="flex"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                            mb={2}
+                                            sx={{
+                                                position: 'sticky',
+                                                top: '64px',
+                                                zIndex: 1,
+                                                backgroundColor: 'transparent'
+                                            }}
+                                        >
+                                            <Typography variant="h6"></Typography>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => navigate('/addAppointment')}
+                                            >
+                                                Add Appointment
+                                            </Button>
+                                        </Box>
                                             <TableContainer component={Paper}>
                                                 <Table>
                                                     <TableHead>
@@ -176,7 +192,7 @@ function Appointment() {
                                                     </TableBody>
                                                 </Table>
                                             </TableContainer>
-                                        </Paper>
+
                                     </Box>
                                 </Grid>
                             </Grid>
