@@ -4,7 +4,7 @@ import logo from '../assets/logoo.png';
 import { CgMenuRightAlt } from "react-icons/cg";
 import Navbar from '../global/Navbar';
 import { FaArrowDown } from "react-icons/fa6";
-import backgroundGif from '../assets/background.jpg';
+import backgroundGif from '../assets/backk.png';
 import cleaning from '../assets/cleaning.jpg';
 import fissure from '../assets/fissure.jpeg';
 import filling from '../assets/fillings.jpg';
@@ -27,6 +27,7 @@ const Logo = styled('img')(({ theme }) => ({
   marginLeft: '100px',
   width: '150px',
   marginTop: '-150px',
+  cursor: 'pointer',
   [theme.breakpoints.down('md')]: {
     width: '120px',
     marginLeft: '20px',
@@ -36,23 +37,33 @@ const Logo = styled('img')(({ theme }) => ({
 
 const Header = styled(Typography)(({ theme }) => ({
   fontWeight: 900,
-  color: '#1E201E',
-  fontSize: '65px',
+  color: '#181818',
+  fontSize: '55px',
   marginBottom: theme.spacing(2),
+  textAlign: 'left',
   [theme.breakpoints.down('sm')]: {
     fontSize: '40px',
   },
 }));
 
 const SubHeader = styled(Typography)(({ theme }) => ({
-  color: '#201E43',
+  color: '#373833',
   marginBottom: theme.spacing(4),
   fontWeight: 700,
   marginTop: '30px',
+  textAlign: 'left',
   [theme.breakpoints.down('sm')]: {
     fontSize: '16px',
   },
 }));
+
+const ContainerStyled = styled(Container)(({ theme }) => ({
+  maxWidth: 'sm',
+  marginTop: '150px',
+  textAlign: 'left',
+  paddingLeft: '20px',
+}));
+
 
 const PhotosSection = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -85,8 +96,8 @@ const Description = styled(Typography)(({ theme }) => ({
 }));
 
 const Footer = styled('footer')(({ theme }) => ({
-  backgroundColor: '#1d1d1d',
-  color: '#fff',
+  backgroundColor: '#222',
+  color: 'white',
   padding: theme.spacing(3),
   textAlign: 'center',
   [theme.breakpoints.up('md')]: {
@@ -96,6 +107,7 @@ const Footer = styled('footer')(({ theme }) => ({
 }));
 
 function Home() {
+
   const theme = useTheme();
   const [modalOpen, setModalOpen] = useState(false);
   const photosSectionRef = useRef(null);
@@ -143,10 +155,12 @@ function Home() {
     height: '610px',
     width: '100%',
     marginTop: '0px',
-    fontSize: '50px',
-    backgroundSize: 'cover',
+    backgroundColor: 'white',
+    backgroundSize: '80%',
+    backgroundPosition: 'top right',
     backgroundRepeat: 'no-repeat',
   };
+
 
   return (
       <>
@@ -154,7 +168,9 @@ function Home() {
           <div style={image}>
             <AppBar position="fixed" color="transparent" elevation={0} sx={{ top: '100px' }}>
               <Toolbar>
-                <Logo src={logo} alt="Dental Care Pro" />
+                <Logo src={logo} alt="Dental Care Pro" onClick={() => {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }} />
                 <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}></Typography>
                 <IconButton color="inherit" onClick={handleOpenModal} sx={{
                   marginTop: '-150px',
@@ -179,29 +195,32 @@ function Home() {
               </Box>
             </Modal>
 
-            <Container maxWidth="sm" sx={{ marginTop: '150px' }} className="fade-in-section">
-              <Header>BRIGHT TEETH FOR BRIGHT LIFE</Header>
-              <SubHeader variant="h6">High quality dental care management system for modern clinics</SubHeader>
-              <Button
-                  onClick={scrollToPhotosSection}
-                  variant="contained"
-                  sx={{
-                    marginTop: '40px',
-                    width: '220px',
-                    borderRadius: '20px',
-                    color: 'white',
-                    backgroundColor: '#3DC2EC',
-                  }}
-              >
-                <Box display="flex" flexDirection="column" alignItems="center">
-                  Explore Our Services
-                  <FaArrowDown />
-                </Box>
-              </Button>
-            </Container>
+            <ContainerStyled className="fade-in-section">
+              <Header> BRIGHT TEETH <br/>FOR BRIGHT LIFE</Header>
+              <SubHeader variant="h6">High quality dental care management system <br/>for modern clinics</SubHeader>
+
+            </ContainerStyled>
+            <Button
+                onClick={scrollToPhotosSection}
+                variant="contained"
+                sx={{
+                  marginTop: '80px',
+                  width: '220px',
+                  borderRadius: '20px',
+                  color: 'white',
+                  backgroundColor: '#1D1D1D',
+                  fontFamily:'Suisse Intl,sans-serif'
+                }}
+            >
+              <Box display="flex" flexDirection="column" alignItems="center">
+                Explore Our Services
+                <FaArrowDown />
+              </Box>
+            </Button>
+
           </div>
 
-          <PhotosSection ref={photosSectionRef} className="fade-in-section">
+          <PhotosSection ref={photosSectionRef} className="fade-in-section" sx={{marginTop:'0px'}}>
             <Typography variant="h4" gutterBottom>
               Our Services
             </Typography>
