@@ -10,6 +10,7 @@ import {
     MenuItem,
     Button
 } from '@mui/material';
+import Axios from "axios";
 
 function UpdateAppointment({payload,onClose}) {
     const [id,setId] = useState('');
@@ -100,6 +101,22 @@ function UpdateAppointment({payload,onClose}) {
 
         axios.put('http://localhost:3000/appointment/update', payload)
             .then(response => {
+
+                Axios.post('http://localhost:3000/api/sendEmail', {
+                    email: email,
+                    subject: 'Appointment Confirmation',
+                    message: `Dear patient, your appointment is Rescheduled on ${date} at ${time}.
+                    Thankyou for contacting Us!`
+                })
+                    .then(response => {
+                        console.log('Email sent successfully:', response);
+                    })
+                    .catch(error => {
+                        console.error('Error sending email:', error);
+                    });
+
+                console.log(response);
+
                 Swal.fire({
                     position: "center",
                     icon: "success",
@@ -107,12 +124,11 @@ function UpdateAppointment({payload,onClose}) {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                window.location.reload();
             }).catch(error => {
             console.error('Axios error :', error);
         });
-
         onClose();
-
     };
 
     const handleBlur = (field) => {
@@ -168,10 +184,7 @@ function UpdateAppointment({payload,onClose}) {
                                                             {d.id}
                                                         </MenuItem>
                                                     ))
-
                                                 }
-
-
                                             </TextField>
                                         </Grid>
                                         <Grid item xs={6}>
