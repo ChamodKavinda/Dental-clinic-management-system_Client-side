@@ -249,6 +249,7 @@ function AddAppointment() {
                                                 name="email"
                                                 variant="outlined"
                                                 value={email}
+                                                type='email'
                                                 onChange={e => setEmail(e.target.value)}
                                                 onBlur={() => handleBlur('email')}
                                                 error={touched.email && !email}

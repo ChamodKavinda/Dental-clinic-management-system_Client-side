@@ -34,6 +34,7 @@ function Appointment() {
     const [username, setUsername] = useState("");
 
     useEffect(()=>{
+
         getAppointment();
         const verifyCookie = async () => {
             if (!cookies.token) {
@@ -120,7 +121,7 @@ function Appointment() {
                     <Sidebar />
                 </div>
 
-                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: 'white',marginLeft: 30 }}>
+                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#f1f2fc',marginLeft: 30 }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                         <Container maxWidth="lg">
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -129,6 +130,7 @@ function Appointment() {
                             <Grid container spacing={2}>
                                 <Grid item xs={20}>
                                     <Box mt={-2}>
+                                        <Paper sx={{ p: 2 }}>
                                         <Box
                                             display="flex"
                                             justifyContent="space-between"
@@ -150,7 +152,7 @@ function Appointment() {
                                                 Add Appointment
                                             </Button>
                                         </Box>
-                                            <TableContainer component={Paper}>
+                                            <TableContainer >
                                                 <Table>
                                                     <TableHead>
                                                         <TableRow>
@@ -192,7 +194,7 @@ function Appointment() {
                                                     </TableBody>
                                                 </Table>
                                             </TableContainer>
-
+                                            </Paper>
                                     </Box>
                                 </Grid>
                             </Grid>
