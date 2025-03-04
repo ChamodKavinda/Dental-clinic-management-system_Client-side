@@ -16,8 +16,10 @@ import AddAppointment from "./components/Appointment/AddAppointment";
 import AddStaff from "./components/Staff/AddStaff";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+
 function App() {
     return (
+
         <>
             <Routes>
                 <Route path="/" element={<Home />} />
