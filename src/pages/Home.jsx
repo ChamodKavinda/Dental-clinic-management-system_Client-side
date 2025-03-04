@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { AppBar, Toolbar, Typography, Box, Button, IconButton, Container, Modal, Grid, Link } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box, Button, IconButton, Container, Modal, Grid, Link, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import logo from '../assets/logoo.png';
 import { CgMenuRightAlt } from "react-icons/cg";
 import Navbar from '../global/Navbar';
@@ -10,7 +11,7 @@ import fissure from '../assets/fissure.jpeg';
 import filling from '../assets/fillings.jpg';
 import remove from '../assets/remove.jpg';
 import './app.css';
-import { styled, useTheme } from '@mui/system';
+import { styled } from '@mui/system';
 
 const Root = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -20,29 +21,35 @@ const Root = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   position: 'relative',
   textAlign: 'center',
+  overflowX: 'hidden',
+  overflow: 'hidden'
 }));
 
 const Logo = styled('img')(({ theme }) => ({
-  marginRight: '8px',
-  marginLeft: '100px',
   width: '150px',
-  marginTop: '-150px',
+  marginRight: 'auto',
+  marginLeft: '20px',
   cursor: 'pointer',
   [theme.breakpoints.down('md')]: {
-    width: '120px',
-    marginLeft: '20px',
-    marginTop: '-100px',
+    width: '100px',
+    marginLeft: '10px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '80px',
   },
 }));
 
 const Header = styled(Typography)(({ theme }) => ({
   fontWeight: 900,
   color: '#181818',
-  fontSize: '55px',
+  fontSize: '3.5rem',
   marginBottom: theme.spacing(2),
-  textAlign: 'left',
+  textAlign: 'center',
+  [theme.breakpoints.down('md')]: {
+    fontSize: '2.5rem',
+  },
   [theme.breakpoints.down('sm')]: {
-    fontSize: '40px',
+    fontSize: '2rem',
   },
 }));
 
@@ -50,49 +57,55 @@ const SubHeader = styled(Typography)(({ theme }) => ({
   color: '#373833',
   marginBottom: theme.spacing(4),
   fontWeight: 700,
-  marginTop: '30px',
-  textAlign: 'left',
+  textAlign: 'center',
+  [theme.breakpoints.down('md')]: {
+    fontSize: '1rem',
+  },
   [theme.breakpoints.down('sm')]: {
-    fontSize: '16px',
+    fontSize: '0.9rem',
   },
 }));
 
 const ContainerStyled = styled(Container)(({ theme }) => ({
-  maxWidth: 'sm',
-  marginTop: '150px',
-  textAlign: 'left',
-  paddingLeft: '20px',
-}));
-
-
-const PhotosSection = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(4),
-  backgroundColor: '#f7f7f7',
+  maxWidth: 'md',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
   textAlign: 'center',
-  marginTop: theme.spacing(4),
-}));
-
-const Photo = styled('img')(({ theme }) => ({
-  width: '300px',
-  display: 'block',
-  height: '220px',
-  marginLeft: 'auto',
-  marginRight: '150px',
-  marginBottom: theme.spacing(2),
-  [theme.breakpoints.down('md')]: {
-    width: '100%',
-    height: 'auto',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+  padding: theme.spacing(2),
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(1),
   },
 }));
 
+const PhotosSection = styled(Box)(({ theme }) => ({
+  width: '100%',
+  padding: theme.spacing(4),
+  backgroundColor: 'white',
+  textAlign: 'center',
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2),
+  },
+}));
+
+const Photo = styled('img')(({ theme }) => ({
+  width: '100%',
+  maxWidth: '300px',
+  height: 'auto',
+  display: 'block',
+  margin: '0 auto',
+  marginBottom: theme.spacing(2),
+}));
 
 const Description = styled(Typography)(({ theme }) => ({
   color: 'black',
   marginBottom: theme.spacing(4),
-  fontWeight:500,
-  fontSize:'15px'
+  fontWeight: 500,
+  fontSize: '1rem',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '0.875rem',
+  },
 }));
 
 const Footer = styled('footer')(({ theme }) => ({
@@ -100,17 +113,14 @@ const Footer = styled('footer')(({ theme }) => ({
   color: 'white',
   padding: theme.spacing(3),
   textAlign: 'center',
-  [theme.breakpoints.up('md')]: {
-    textAlign: 'left',
-    padding: theme.spacing(3, 6),
-  },
 }));
 
 function Home() {
-
   const theme = useTheme();
   const [modalOpen, setModalOpen] = useState(false);
   const photosSectionRef = useRef(null);
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -150,41 +160,38 @@ function Home() {
     };
   }, []);
 
-  const image = {
-    background: `url(${backgroundGif})`,
-    height: '610px',
-    width: '100%',
-    marginTop: '0px',
-    backgroundColor: 'white',
-    backgroundSize: '80%',
-    backgroundPosition: 'top right',
+  const backgroundStyle = {
+    backgroundImage: `url(${backgroundGif})`,
+    backgroundSize: isMobile ? 'cover' : '80%',
+    backgroundPosition: isMobile ? 'center' : 'top right',
     backgroundRepeat: 'no-repeat',
+    width: '100%',
+    minHeight: isMobile ? '500px' : '680px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    overflow: 'hidden'
   };
-
 
   return (
       <>
         <Root>
-          <div style={image}>
-            <AppBar position="fixed" color="transparent" elevation={0} sx={{ top: '100px' }}>
-              <Toolbar>
-                <Logo src={logo} alt="Dental Care Pro" onClick={() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }} />
-                <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}></Typography>
-                <IconButton color="inherit" onClick={handleOpenModal} sx={{
-                  marginTop: '-150px',
-                  marginRight: '150px',
-                  [theme.breakpoints.down('md')]: {
-                    marginTop: '-120px',
-                    marginRight: '50px',
-                  },
-                  [theme.breakpoints.down('sm')]: {
-                    marginTop: '-100px',
-                    marginRight: '20px',
-                  },
-                }}>
-                  <CgMenuRightAlt size={40} />
+          <div style={backgroundStyle}>
+            <AppBar position="fixed" color="transparent" elevation={0}>
+              <Toolbar sx={{ justifyContent: 'space-between', width: '100%', marginTop:'60px' }}>
+                <Logo
+                    src={logo}
+                    alt="Dental Care Pro"
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                />
+                <IconButton
+                    color="inherit"
+                    onClick={handleOpenModal}
+                    sx={{ marginRight: isMobile ? '10px' : '20px' }}
+                >
+                  <CgMenuRightAlt size={isMobile ? 30 : 40} />
                 </IconButton>
               </Toolbar>
             </AppBar>
@@ -196,67 +203,63 @@ function Home() {
             </Modal>
 
             <ContainerStyled className="fade-in-section">
-              <Header> BRIGHT TEETH <br/>FOR BRIGHT LIFE</Header>
-              <SubHeader variant="h6">High quality dental care management system <br/>for modern clinics</SubHeader>
-
+              <Header>
+                BRIGHT TEETH <br/> FOR BRIGHT LIFE
+              </Header>
+              <SubHeader>
+                High quality dental care management system
+                {!isMobile && <br/>}
+                for modern clinics
+              </SubHeader>
             </ContainerStyled>
+
             <Button
                 onClick={scrollToPhotosSection}
                 variant="contained"
                 sx={{
-                  marginTop: '80px',
-                  width: '220px',
+                  mt: 4,
+                  width: isMobile ? '180px' : '220px',
                   borderRadius: '20px',
                   color: 'white',
                   backgroundColor: '#1D1D1D',
-                  fontFamily:'Suisse Intl,sans-serif'
+                  fontFamily: 'Suisse Intl,sans-serif'
                 }}
             >
-              <Box display="flex" flexDirection="column" alignItems="center">
+              <Box display="flex" flexDirection="column" alignItems="center" >
                 Explore Our Services
                 <FaArrowDown />
               </Box>
             </Button>
-
           </div>
 
-          <PhotosSection ref={photosSectionRef} className="fade-in-section" sx={{marginTop:'0px'}}>
-            <Typography variant="h4" gutterBottom>
+          <PhotosSection ref={photosSectionRef} className="fade-in-section">
+            <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                  fontWeight: 900,
+                  fontSize: isMobile ? '1.5rem' : '2rem'
+                }}
+            >
               Our Services
             </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <Typography sx={{ fontWeight: 900 , fontSize:'18px'}}>Professional teeth cleaning</Typography>
-                <hr />
-                <Photo src={cleaning} alt="Service 1" />
-                <Description variant="body1">
-                  Dental cleaning removes plaque, tartar, and stains to keep teeth healthy and prevent gum disease. Performed by dental professionals, it’s typically recommended every six months to maintain oral hygiene and prevent future dental issues.
-                </Description>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography sx={{ fontWeight: 900 , fontSize:'18px'}}>Dental fissure sealants</Typography>
-                <hr />
-                <Photo src={fissure} alt="Service 2" />
-                <Description variant="body1">
-                  Fissure sealants are a protective treatment for molars and premolars, covering grooves that are hard to clean. This barrier helps prevent tooth decay by keeping food and bacteria from getting trapped.
-                </Description>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography sx={{ fontWeight: 900 , fontSize:'18px'}}>Dental filling</Typography>
-                <hr />
-                <Photo src={filling} alt="Service 3" />
-                <Description variant="body1">
-                  Dental fillings restore teeth damaged by decay or fractures. The procedure removes the damaged area and fills the cavity to restore the tooth’s function and structure.
-                </Description>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography sx={{ fontWeight: 900 , fontSize:'18px'}}>Tooth removal</Typography>
-                <hr />
-                <Photo src={remove} alt="Service 4" />
-                <Description variant="body1">
-                  Tooth removal, or extraction, is when a dentist removes a tooth from its socket. It's done due to decay, gum disease, trauma, overcrowding, or in preparation for orthodontics.
-                </Description>
-              </Grid>
+            <Grid container spacing={isMobile ? 2 : 4} justifyContent="center">
+              {[
+                { img: cleaning, title: "Professional teeth cleaning", desc: "Dental cleaning removes plaque, tartar, and stains to keep teeth healthy and prevent gum disease. Performed by dental professionals, it's typically recommended every six months to maintain oral hygiene and prevent future dental issues." },
+                { img: fissure, title: "Dental fissure sealants", desc: "Fissure sealants are a protective treatment for molars and premolars, covering grooves that are hard to clean. This barrier helps prevent tooth decay by keeping food and bacteria from getting trapped." },
+                { img: filling, title: "Dental filling", desc: "Dental fillings restore teeth damaged by decay or fractures. The procedure removes the damaged area and fills the cavity to restore the tooth's function and structure." },
+                { img: remove, title: "Tooth removal", desc: "Tooth removal, or extraction, is when a dentist removes a tooth from its socket. It's done due to decay, gum disease, trauma, overcrowding, or in preparation for orthodontics." }
+              ].map((service, index) => (
+                  <Grid item xs={12} sm={6} key={index}>
+                    <Typography sx={{ fontWeight: 900, fontSize: isMobile ? '1rem' : '1.125rem' }}>
+                      {service.title}
+                    </Typography>
+                    <Photo src={service.img} alt={`Service ${index + 1}`} />
+                    <Description variant="body1">
+                      {service.desc}
+                    </Description>
+                  </Grid>
+              ))}
             </Grid>
           </PhotosSection>
         </Root>
@@ -264,7 +267,7 @@ function Home() {
         <Footer>
           <Typography sx={{
             marginBottom: '20px',
-            fontSize: { xs: '20px', md: '24px' },
+            fontSize: { xs: '1.25rem', md: '1.5rem' },
             fontWeight: 900
           }}>
             Dental Care Pro
