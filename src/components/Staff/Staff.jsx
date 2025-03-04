@@ -73,11 +73,6 @@ function Staff() {
         })
     }
 
-    const handleSuccess = (msg) =>
-        toast.success(msg, {
-            position:'top-right'
-        });
-
     const deleteEmployee=(userId)=>{
 
         Swal.fire({
@@ -131,7 +126,7 @@ function Staff() {
                     <Sidebar />
                 </div>
 
-                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7',marginLeft: 30 }}>
+                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#f1f2fc',marginLeft: 30 }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                         <Container maxWidth="lg">
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -173,7 +168,7 @@ function Staff() {
                                                             <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Phone Number</TableCell>
                                                             <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Sex</TableCell>
                                                             <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Address</TableCell>
-                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Description</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Role</TableCell>
                                                             <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Actions</TableCell>
                                                         </TableRow>
                                                     </TableHead>
