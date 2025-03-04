@@ -3,9 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import {Box, Button, Container, Grid, Paper, TextField, Typography} from "@mui/material";
-import {styled} from "@mui/system";
-import dental from '../assets/dental.jpg';
 import dental3 from "../assets/logoo.png";
 
 const Signup = () => {
@@ -76,14 +73,6 @@ const Signup = () => {
 
     return(
         <>
-            {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <img
