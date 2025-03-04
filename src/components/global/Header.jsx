@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import {useNavigate,Link} from "react-router-dom";
 import { AppBar, Toolbar, Typography, Avatar, Box, Menu, MenuItem, ListItemIcon } from '@mui/material';
 import { Settings, Logout } from '@mui/icons-material';
-import teeth from '../../assets/teeth.png';
+import logo from '../../assets/logoWhite.png';
 
-const Header = ({logout}) => {
+const Header = ({email,logout}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const navigate = useNavigate();
@@ -17,23 +17,16 @@ const Header = ({logout}) => {
         setAnchorEl(null);
     };
 
-    const handleLoginClick = (path) => {
-        navigate(path);
-    };
-
     return (
-        <AppBar position="static" sx={{ bgcolor:"#8AA899" }}>
+        <AppBar position="static" sx={{ bgcolor:"#8AA899",position:'fixed' }}>
             <Toolbar>
-                <Box component="img" src={teeth} sx={{ width: 70, height: 40, marginRight: 2 , bgcolor:'#CAE7DF', cursor:'pointer'}} onClick={()=>navigate('/dashboard')} />
-                <Typography variant="h5" sx={{ flexGrow: 1 , color:'white', fontWeight:'bold',cursor:'pointer'}} onClick={()=>navigate('/dashboard')}>
-                    Dental Pro Care
-                </Typography>
+                <Box component="img" src={logo} sx={{width: 90, height: 40, marginLeft: '50px' ,cursor:'pointer'}} onClick={()=>navigate('/dashboard')} />
 
-                <Box display="flex" alignItems="center" onClick={handleClick} sx={{ cursor: 'pointer' }}>
-                    <Avatar alt="Kamal" />
+                <Box display="flex" alignItems="center" onClick={handleClick} sx={{ cursor: 'pointer',marginLeft:'770px' }}>
+                    <Avatar alt="Kamal"  sx={{ml:20}}/>
                     <Box ml={2} sx={{color:'white'}}>
-                        <Typography>Kamal</Typography>
-                        <Typography variant="body2">kamalsilva100@gmail.com</Typography>
+
+                        <Typography variant="body2">dentalcarepro0@gmail.com</Typography>
                     </Box>
                 </Box>
                 <Menu
