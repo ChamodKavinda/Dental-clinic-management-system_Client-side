@@ -1,20 +1,44 @@
 import React from 'react';
 import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Title,
+    Tooltip,
+    Legend
+} from 'chart.js';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Title,
+    Tooltip,
+    Legend
+);
+import { Line } from 'react-chartjs-2';
 import {
     Box,
     Container,
     Divider,
-    Grid,
-    Paper,
+    Grid, IconButton,
+    Paper, TableCell, TableRow,
     Typography
 } from "@mui/material";
-import { Event, Group, MedicalServices, Person} from "@mui/icons-material";
+import {Delete, Edit, Event, Group, MedicalServices, Person} from "@mui/icons-material";
 import TodayIcon from '@mui/icons-material/Today';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,13 +49,16 @@ function Dashboard() {
     const [dentist,setDentist]=useState([]);
     const [employee,setEmployee]=useState([]);
 
+    const [loading, setLoading] = useState(true);
+
     const fetchAllData = async () => {
         try {
             const [patientsRes, dentistsRes, appointmentsRes, employeeRes] = await Promise.all([
                 axios.get('http://localhost:3000/patient/get'),
                 axios.get('http://localhost:3000/dentist/get'),
                 axios.get('http://localhost:3000/appointment/get'),
-                axios.get('http://localhost:3000/employee/get')
+                axios.get('http://localhost:3000/employee/get'),
+                setLoading(false)
             ]);
 
             setPatient(patientsRes.data || []);
@@ -40,6 +67,7 @@ function Dashboard() {
             setEmployee(employeeRes.data || []);
         } catch (error) {
             console.error('Error fetching data:', error);
+            setLoading(false);
         }
     };
 
@@ -47,6 +75,12 @@ function Dashboard() {
     const pId=appointment.map(row=>(
         <ul key={row.id}>
             {row.patientId}
+        </ul>
+    ));
+
+    const pName=patient.map(row=>(
+        <ul key={row.id}>
+            {row.name}
         </ul>
     ));
 
@@ -68,11 +102,6 @@ function Dashboard() {
             {row.dentistId}
         </ul>
     ))
-
-    const handleSuccess = (msg) =>
-        toast.success(msg, {
-            position: "top-right",
-        });
 
 
     const navigate = useNavigate();
@@ -114,10 +143,66 @@ function Dashboard() {
     };
 
 
+    const getAppointmentCountsByMonth = () => {
+        const months = Array(12).fill(0);
+
+        appointment.forEach(appointment => {
+            const month = new Date(appointment.date).getMonth();
+            months[month]++;
+        });
+
+        return months;
+    };
+
+    const chartData = {
+        labels: [
+            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+        ],
+        datasets: [
+            {
+                label: 'Appointments per Month',
+                data: getAppointmentCountsByMonth(),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 5,
+            },
+        ],
+    };
+
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Number of Appointments Per Month',
+            },
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Month',
+                },
+            },
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Number of Appointments',
+                },
+            },
+        },
+    };
+
+    const location = useLocation();
     return (
         <>
-            <Header logout={Logout}/>
-
+            <Header email={location.state} logout={Logout}/>
             <div className="main d-flex">
                 <div className="sidebarWrapper">
                     <Sidebar/>
@@ -126,7 +211,7 @@ function Dashboard() {
                 <div>
                     <ToastContainer />
 
-                    <Box sx={{ display: 'flex', bgcolor:'#F7F7F7' }}>
+                    <Box sx={{ display: 'block', bgcolor:'#f1f2fc',marginTop: 8 ,marginLeft: 30}}>
                         <Box component="main" sx={{ flexGrow: 1, p: 3 ,minWidth: '83vw' }}>
                             <Container maxWidth="lg">
                                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -135,37 +220,37 @@ function Dashboard() {
                                 <Grid container spacing={3}>
                                     <Grid item xs={12} sm={6} md={3}>
                                         <Paper elevation={3} sx={{ p: 2, display: 'flex', alignItems: 'center', height: '100%' }}>
-                                            <TodayIcon fontSize="large" sx={{ mr: 2 }} />
+                                            <TodayIcon  sx={{ mr: 2,color:'#6f42c1' }}  style={{ fontSize: 50 }} />
                                             <Box>
-                                                <Typography variant="h5" align="left">{appointment.length}</Typography>
-                                                <Typography>Total Appointment</Typography>
+                                                <Typography variant="h5" align="left" style={{ fontSize: 30 }}>{appointment.length}</Typography>
+                                                <Typography style={{ fontSize: 17,fontWeight:'500' }}>Total Appointment</Typography>
                                             </Box>
                                         </Paper>
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={3}>
                                         <Paper elevation={3} sx={{ p: 2, display: 'flex', alignItems: 'center', height: '100%' }}>
-                                            <Person fontSize="large" sx={{ mr: 2 }} />
+                                            <Person fontSize="large" sx={{ mr: 2 ,color:'#fd7e14'}} style={{ fontSize: 50 }} />
                                             <Box>
-                                                <Typography variant="h5" align="left">{patient.length}</Typography>
-                                                <Typography align="left">Total Patient</Typography>
+                                                <Typography variant="h5" align="left" style={{ fontSize: 30 }}>{patient.length}</Typography>
+                                                <Typography align="left" style={{ fontSize: 17,fontWeight:'500' }}>Total Patient</Typography>
                                             </Box>
                                         </Paper>
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={3}>
                                         <Paper elevation={3} sx={{ p: 2, display: 'flex', alignItems: 'center', height: '100%' }}>
-                                            <MedicalServices fontSize="large" sx={{ mr: 2 }} />
+                                            <MedicalServices fontSize="large" sx={{ mr: 2,color:'#20c997' }} style={{ fontSize: 50 }}/>
                                             <Box>
-                                                <Typography variant="h5" align="left">{dentist.length}</Typography>
-                                                <Typography align="left">Total Dentists</Typography>
+                                                <Typography variant="h5" align="left" style={{ fontSize: 30 }}>{dentist.length}</Typography>
+                                                <Typography align="left"  style={{ fontSize: 17,fontWeight:'500' }}>Total Dentists</Typography>
                                             </Box>
                                         </Paper>
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={3}>
                                         <Paper elevation={3} sx={{ p: 2, display: 'flex', alignItems: 'center', height: '100%' }}>
-                                            <Group fontSize="large" sx={{ mr: 2 }} />
+                                            <Group fontSize="large" sx={{ mr: 2,color:'#0d6efd' }} style={{ fontSize: 50 }} />
                                             <Box>
-                                                <Typography variant="h5" align="left">{employee.length}</Typography>
-                                                <Typography align="left">Total Employees</Typography>
+                                                <Typography variant="h5" align="left" style={{ fontSize: 30 }}>{employee.length}</Typography>
+                                                <Typography align="left" style={{ fontSize: 17,fontWeight:'500' }}>Total Employees</Typography>
                                             </Box>
                                         </Paper>
                                     </Grid>
@@ -175,55 +260,120 @@ function Dashboard() {
                                 <Box mt={4}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="h6" gutterBottom sx={{fontWeight:'bold'}}>Appointments</Typography>
-                                        <Grid container spacing={2}>
+                                        <Grid container spacing={2} >
                                             <Grid item xs={12}>
-                                                <Box display="flex" p={1} bgcolor="grey.200" borderRadius={1}>
+                                                <Box
+                                                    display="flex"
+                                                    p={2}
+                                                    bgcolor="grey.200"
+                                                    borderRadius={1}
+                                                    alignItems="center"
+                                                    borderBottom="1px solid #ccc"
+                                                >
+                                                    <Typography variant="subtitle1" fontWeight={600}>
+                                                        Patient Details
+                                                    </Typography>
+                                                    <Box flexGrow={1} />
+                                                    <Typography variant="subtitle1" fontWeight={600}>
+                                                        Dentist Details
+                                                    </Typography>
+                                                    <Box flexGrow={1} />
+                                                    <Typography variant="subtitle1" fontWeight={600}>
+                                                        Date
+                                                    </Typography>
+                                                    <Box flexGrow={1} />
+                                                    <Typography variant="subtitle1" fontWeight={600}>
+                                                        Time
+                                                    </Typography>
+                                                </Box>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', p: 2, borderBottom: '1px solid #ccc' }}>
                                                     <Box flexGrow={1}>
-                                                        <Typography variant="subtitle1">Patient Details</Typography>
+                                                        <Typography fontWeight={500}>{pId}</Typography>
                                                     </Box>
-                                                    <Box flexGrow={0.8}>
-                                                        <Typography variant="subtitle1">Dentist Details</Typography>
+                                                    <Divider orientation="vertical" flexItem />
+                                                    <Box flexGrow={1} textAlign="center">
+                                                        <Typography fontWeight={500}>{dId}</Typography>
                                                     </Box>
-                                                    <Box flexGrow={1.5}>
-                                                        <Typography variant="subtitle1">Date</Typography>
+                                                    <Divider orientation="vertical" flexItem />
+                                                    <Box flexGrow={1} textAlign="center">
+                                                        <Typography fontWeight={500}>{pDate}</Typography>
                                                     </Box>
-                                                    <Box flexGrow={-1}>
-                                                        <Typography variant="subtitle1">Time</Typography>
+                                                    <Divider orientation="vertical" flexItem />
+                                                    <Box flexGrow={1} textAlign="right">
+                                                        <Typography fontWeight={500}>{pTime}</Typography>
                                                     </Box>
                                                 </Box>
                                             </Grid>
-                                                <Grid item xs={12}>
-                                                    <Paper sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
-                                                        <Box flexGrow={1}>
-                                                                        <Typography >
-                                                                            {pId}
-                                                                        </Typography>
-                                                        </Box>
-                                                        <Divider orientation="vertical" flexItem />
-                                                        <Box flexGrow={1} textAlign="center">
-                                                            <Typography>
-                                                                {dId}
-                                                            </Typography>
-                                                        </Box>
-                                                        <Divider orientation="vertical" flexItem />
-                                                        <Box flexGrow={1} textAlign="center">
-                                                            <Typography>
-                                                                {pDate}
-                                                            </Typography>
-                                                        </Box>
-                                                        <Divider orientation="vertical" flexItem />
-                                                        <Box flexGrow={1} textAlign="right">
-                                                            <Typography>
-                                                                {pTime}
-                                                            </Typography>
-                                                        </Box>
-                                                    </Paper>
-                                                </Grid>
                                         </Grid>
                                     </Paper>
                                 </Box>
                             </Container>
+
+                            <main className="flex-1 p-6">
+
+                                <div className="grid grid-cols-3 gap-6">
+                                    <div className="col-span-2 bg-white p-3 rounded-md shadow-md">
+                                        <div className="text-lg font-bold mb-4">Patients List</div>
+                                        <table className="w-full text-left">
+                                            <thead>
+                                            <tr>
+                                                <th className="pb-2">Patient Id</th>
+                                                <th className="pb-2">Patient Name</th>
+                                                <th className="pb-2">Age</th>
+                                                <th className="pb-2">Phone Number</th>
+                                                <th className="pb-2">Sex</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {patient.length > 0 ? patient.map(row =>(
+                                                <TableRow key={row.id}>
+                                                    <TableCell component='th' scope="row">{row.id}</TableCell>
+                                                    <TableCell component='th' scope="row">{row.name}</TableCell>
+                                                    <TableCell component='th' scope="row">{row.age}</TableCell>
+                                                    <TableCell component='th' scope="row">{row.number}</TableCell>
+                                                    <TableCell component='th' scope="row">{row.sex}</TableCell>
+                                                </TableRow>
+                                            )): (
+                                                <TableRow >
+                                                    <TableCell component='th' scope="row">No Data</TableCell>
+                                                </TableRow>
+                                            )
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-md shadow-md">
+                                        <div className="text-lg font-bold mb-4">Doctors List</div>
+                                        <table className="w-full text-left">
+                                            <thead>
+                                            <tr>
+                                                <th className="pb-2">Doctor Id</th>
+                                                <th className="pb-2">Doctor Name</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {dentist.length > 0 ? dentist.map(row=> (
+                                                <TableRow key={row.id}>
+                                                    <TableCell component='th' scope="row">{row.id}</TableCell>
+                                                    <TableCell component='th' scope="row">{row.name}</TableCell>
+                                                </TableRow>
+                                            )):(
+                                                <TableRow >
+                                                    <TableCell>No Data</TableCell>
+                                                </TableRow>
+                                            )
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </main>
                         </Box>
+                        <div style={{ width: '80%', margin: 'auto',backgroundColor:'white' }}>
+                            <Line data={chartData} options={chartOptions} />
+                        </div>
                     </Box>
                 </div>
             </div>
