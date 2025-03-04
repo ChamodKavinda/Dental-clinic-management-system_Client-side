@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, List, ListItem, ListItemIcon, ListItemText, Divider } from '@mui/material';
 import { Dashboard, Event, Person, MedicalServices, Group } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
-
 const Sidebar = () => {
     const location = useLocation();
 
@@ -11,7 +10,7 @@ const Sidebar = () => {
     };
 
     return (
-        <Box sx={{ width: 240, height: '100vh', backgroundColor: '#95D2B3', color: 'white' }}>
+        <Box sx={{ width: 240, height: '100vh', backgroundColor: '#95D2B3', color: 'white',position:'fixed',marginTop: 8 }}>
             <List>
                 <ListItem button component={Link} to="/dashboard" sx={getListItemStyle('/dashboard')}>
                     <ListItemIcon>
