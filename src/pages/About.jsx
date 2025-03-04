@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 import {AppBar, Toolbar, Typography, IconButton, Box, Modal, Container, Grid, Link} from '@mui/material';
 import { CgMenuRightAlt } from "react-icons/cg";
-import about from '../assets/about.jpg';
-import about1 from '../assets/about1.jpeg';
+import about from '../assets/about4.jpg';
+import about1 from '../assets/about3.jpg';
 import { useState } from 'react';
 import Navbar from '../global/Navbar';
 import dental from '../assets/logo.jpg';
@@ -11,12 +11,6 @@ import {useNavigate} from "react-router-dom";
 import logo from "../assets/logoo.png";
 import {styled} from "@mui/system";
 
-const teamMembers = [
-    { name: 'Dr. John Doe', role: 'Founder/Owner', image: 'path_to_image' },
-    { name: 'Dr. Jane Smith', role: 'Chief Dental Officer', image: 'path_to_image' },
-    { name: 'Emily Brown', role: 'Dental Hygienist', image: 'path_to_image' },
-    // Add more team members as needed
-];
 
 const About = () => {
     const [modalOpen, setModalOpen] = useState(false);
