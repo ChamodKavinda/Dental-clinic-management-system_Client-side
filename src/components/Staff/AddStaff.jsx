@@ -3,7 +3,7 @@ import Sidebar from "../global/Sidebar";
 import React, {useEffect,useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -244,15 +244,15 @@ function AddStaff() {
                                         <Grid item xs={12}>
                                             <TextField
                                                 fullWidth
-                                                label="Description"
-                                                name="description"
+                                                label="Role"
+                                                name="role"
                                                 variant="outlined"
                                                 multiline
                                                 rows={4}
                                                 value={description}
                                                 onChange={e =>{setDescription(e.target.value)}}
                                                 onBlur={() => handleBlur('description')}
-                                                
+                                                required
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
