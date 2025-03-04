@@ -20,8 +20,6 @@ function UpdateStaff({payload,onClose}) {
     const [sex,setSex] = useState('');
     const [address,setAddress] = useState('');
     const [description,setDescription] = useState('');
-
-    const navigate = useNavigate();
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const [touched, setTouched] = useState({
         id: false,
@@ -95,6 +93,7 @@ function UpdateStaff({payload,onClose}) {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                window.location.reload();
             }).catch(error => {
             console.error('Axios error :', error);
         });
@@ -218,8 +217,6 @@ function UpdateStaff({payload,onClose}) {
                         </Container>
                     </Box>
                 </Box>
-
-
             </div>
         </>
     );
