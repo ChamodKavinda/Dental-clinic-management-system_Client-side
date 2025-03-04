@@ -2,7 +2,7 @@ import Header from "../global/Header";
 import Sidebar from "../global/Sidebar";
 import React, {useEffect,useState} from "react";
 import {useNavigate} from "react-router-dom";
-import axios, {Axios} from "axios";
+import axios from "axios";
 
 import {
     Container,
@@ -20,8 +20,6 @@ import Swal from "sweetalert2";
 
 
 function AddDentist() {
-
-    const [submitted, setSubmitted] = useState(false);
 
     const [id, setId] = useState('');
     const [name, setName] = useState('');
@@ -44,6 +42,7 @@ function AddDentist() {
 
 
     useEffect(() => {
+        fetchLastDentistId();
         if (id && name && age && number && sex && address) {
             setIsSubmitDisabled(false);
         } else {
@@ -70,40 +69,10 @@ function AddDentist() {
         });
     };
 
-
-    useEffect(() => {
-        fetchLastDentistId();
-        if (submitted) {
-            setDentist({
-                id: '',
-                name: '',
-                age: '',
-                phone: '',
-                sex: '',
-                address: '',
-                description: ''
-            });
-            setSubmitted(false);
-        }
-    }, [submitted]);
-
     const navigate=useNavigate();
 
-    const [dentist, setDentist] = useState({
-        id: '',
-        name: '',
-        age: '',
-        phone: '',
-        sex: '',
-        address: '',
-        description: ''
-    });
-
-
     const handleSubmit = (e) => {
-
         e.preventDefault();
-
         const payload={
             id: id,
             name: name,
@@ -274,13 +243,14 @@ function AddDentist() {
                                         <Grid item xs={12}>
                                             <TextField
                                                 fullWidth
-                                                label="Description"
-                                                name="description"
+                                                label="Occupation"
+                                                name="Occupation"
                                                 variant="outlined"
                                                 multiline
                                                 rows={4}
                                                 value={description}
                                                 onChange={e =>setDescription(e.target.value)}
+                                                required
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -306,8 +276,6 @@ function AddDentist() {
                         </Container>
                     </Box>
                 </Box>
-
-
             </div>
         </>
     );
