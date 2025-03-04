@@ -63,11 +63,6 @@ function Patient() {
         navigate("/home");
     };
 
-    const handleSuccess = (msg) =>
-        toast.success(msg, {
-            position:'top-right'
-        });
-
     const getPatient=()=>{
         Axios.get('http://localhost:3000/patient/get')
             .then(response=>{
@@ -130,7 +125,7 @@ function Patient() {
                     <Sidebar />
                 </div>
 
-                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7',marginLeft: 30 }}>
+                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#f1f2fc',marginLeft: 30 }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                         <Container maxWidth="lg">
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
