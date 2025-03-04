@@ -92,6 +92,7 @@ function UpdateDentist({payload,onClose}) {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                window.location.reload();
             }).catch(error => {
             console.error('Axios error :', error);
         });
