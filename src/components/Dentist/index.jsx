@@ -71,11 +71,6 @@ function Dentist() {
         })
     }
 
-    const handleSuccess = (msg) =>
-        toast.success(msg, {
-            position:'top-right'
-        });
-
     const deleteDentist=(userId)=>{
         Swal.fire({
             title: "Are you sure?",
@@ -128,7 +123,7 @@ function Dentist() {
                     <Sidebar />
                 </div>
 
-                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#F7F7F7',marginLeft: 30 }}>
+                <Box sx={{ display: 'flex', flexGrow: 1, bgcolor: '#f1f2fc',marginLeft: 30 }}>
                     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                         <Container maxWidth="lg">
                             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -170,7 +165,7 @@ function Dentist() {
                                                             <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Phone Number</TableCell>
                                                             <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Sex</TableCell>
                                                             <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Address</TableCell>
-                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Description</TableCell>
+                                                            <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Occupation</TableCell>
                                                             <TableCell sx={{fontWeight:'revert',fontSize:'revert'}}>Actions</TableCell>
                                                         </TableRow>
                                                     </TableHead>
